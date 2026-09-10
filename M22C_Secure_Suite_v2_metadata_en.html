@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M22C Secure Suite v2</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-between p-4 sm:p-8">
+
+    <div class="max-w-3xl w-full bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl p-6 sm:p-8">
+
+        <div class="text-center mb-6">
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-wider text-emerald-400">
+                M22C SECURE SUITE
+            </h1>
+
+            <p class="text-sm text-slate-400 mt-1">
+                AES-256-GCM + PBKDF2-SHA-256 + Recursive Fragmentation 4x4x4
+            </p>
+
+            <p id="fsApiNote" class="text-xs text-amber-400 mt-2 hidden"></p>
+        </div>
+
+        <div class="flex border-b border-slate-700 mb-6">
+
+            <button
+                id="btnTabCripta"
+                onclick="switchTab('cripta')"
+                class="flex-1 py-3 font-semibold text-center border-b-2 border-emerald-400 text-emerald-400 transition">
+                Encryption & Protection
+            </button>
+
+            <button
+                id="btnTabDecripta"
+                onclick="switchTab('decripta')"
+                class="flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+                Decryption & Recovery
+            </button>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- ENCRYPTION SECTION -->
+        <!-- ========================= -->
+
+        <div id="sectionCripta" class="space-y-6">
+
+            <div class="space-y-2">
+
+                <input
+                    type="file"
+                    id="inputFile"
+                    onchange="updateStep1Status()"
+                    class="hidden">
+
+                <button
+                    type="button"
+                    onclick="document.getElementById('inputFile').click()"
+                    id="btnStep1"
+                    class="w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between">
+
+                    <span class="flex items-center gap-2">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+
+                        Step 1 - Choose file
+
+                    </span>
+
+                    <span
+                        id="btnStep1Badge"
+                        class="text-xs bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-md font-semibold">
+                        No file selected
+                    </span>
+
+                </button>
+
+            </div>
+
+            <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-4 space-y-4">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Password 1
+                        </label>
+
+                        <input
+                            type="password"
+                            id="pass1"
+                            value="123"
+                            autocomplete="new-password"
+                            placeholder="Password 1"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Password 2
+                        </label>
+
+                        <input
+                            type="password"
+                            id="pass2"
+                            value="456"
+                            autocomplete="new-password"
+                            placeholder="Password 2"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Password 3
+                        </label>
+
+                        <input
+                            type="password"
+                            id="pass3"
+                            value="789"
+                            autocomplete="new-password"
+                            placeholder="Password 3"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                </div>
+
+                <div class="border-t border-slate-700/70 pt-4 mt-2">
+                    <div class="flex items-start gap-2">
+                        <input
+                            type="checkbox"
+                            id="tryRemoveMetadata"
+                            class="w-4 h-4 mt-0.5 accent-emerald-400 cursor-pointer">
+                        <div>
+                            <label for="tryRemoveMetadata" class="text-sm font-semibold text-slate-300 cursor-pointer">
+                                Try to remove metadata before encryption
+                            </label>
+                            <div class="text-[10px] text-slate-500 mt-1">
+                                M22C will try to remove metadata supported by the file format. Removal may be incomplete or unavailable for some formats. The original file is never modified.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Maximum container size (MB)
+                        </label>
+                        <input
+                            type="number"
+                            id="containerMaxMB"
+                            value="10"
+                            min="1"
+                            max="4096"
+                            step="1"
+                            onchange="checkStep3Status()"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                        <div class="text-[10px] text-slate-500 mt-1">Minimum 1 MB. Minimum physical count: 3 containers.</div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Container Naming Style
+                        </label>
+
+                        <select
+                            id="namingStyle"
+                            onchange="handleNamingSelection()"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                            <option value="random">Random</option>
+                            <option value="ordered">Ordered (gs-01, gs-02, ...)</option>
+                            <option value="custom">Custom prefix</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Output Folder
+                        </label>
+
+                        <button
+                            type="button"
+                            onclick="chooseOutputFolder()"
+                            id="btnStep2"
+                            class="w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-2 px-3 rounded-xl shadow transition duration-200 flex items-center justify-between text-xs">
+
+                            <span class="truncate flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <span id="btnStep2Text">Select folder (optional in fallback)</span>
+                            </span>
+
+                            <span id="btnStep2Badge" class="shrink-0 bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-semibold ml-2">
+                                Not set
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="customNamingBox" class="hidden pt-1">
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        Custom prefix
+                    </label>
+                    <input
+                        type="text"
+                        id="customNamesInput"
+                        placeholder="es. MIOFILE"
+                        value="M22C"
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm font-mono text-emerald-400 focus:outline-none focus:border-emerald-400">
+                    <div class="text-[10px] text-slate-500 mt-1">Automatically generates PREFIX-01.m22c, PREFIX-02.m22c, ...</div>
+                </div>
+
+                <div class="border-t border-slate-700/70 pt-4 mt-2">
+                    <div class="flex items-start gap-2">
+                        <input
+                            type="checkbox"
+                            id="enableCamouflage"
+                            onchange="handleCamouflageUI()"
+                            class="w-4 h-4 mt-0.5 accent-emerald-400 cursor-pointer">
+                        <div>
+                            <label for="enableCamouflage" class="text-sm font-semibold text-slate-300 cursor-pointer">
+                                Camouflage containers as JPG images
+                            </label>
+                            <div class="text-[10px] text-slate-500 mt-1">
+                                Disabled by default. The M22C container is appended to a JPEG.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="camouflageOptions" class="hidden mt-3 bg-slate-950/70 border border-slate-800 rounded-xl p-3 space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">
+                                    Image source
+                                </label>
+                                <select
+                                    id="camouflageSource"
+                                    onchange="handleCamouflageSource()"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                                    <option value="auto" selected>Generate automatically</option>
+                                    <option value="single">Use one image for all containers</option>
+                                    <option value="multiple">Select one image for each container</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">
+                                    Image file names
+                                </label>
+                                <select
+                                    id="camouflageNamingStyle"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                                    <option value="random" selected>Casuale</option>
+                                    <option value="ordered">Ordered (IMG-01.jpg, IMG-02.jpg, ...)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="camouflageSingleBox" class="hidden">
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">
+                                JPG image to reuse
+                            </label>
+                            <input
+                                type="file"
+                                id="camouflageSingleInput"
+                                accept=".jpg,.jpeg,image/jpeg"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400">
+                        </div>
+
+                        <div id="camouflageMultipleBox" class="hidden">
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">
+                                JPG images
+                            </label>
+                            <input
+                                type="file"
+                                id="camouflageMultipleInput"
+                                multiple
+                                accept=".jpg,.jpeg,image/jpeg"
+                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400">
+                            <div class="text-[10px] text-slate-500 mt-1">Select exactly one image for each generated containers.</div>
+                        </div>
+
+                        <div class="text-[10px] text-slate-500">
+                            Note: the MB limit still applies to the container <strong class="text-slate-300">.m22c</strong>. The final JPEG also includes the image data.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-[11px] text-slate-500">
+                    Current encryption format: <strong class="text-slate-300">M22C v2</strong> with dynamic containers.
+                    Default limit: <strong class="text-slate-300">10 MB</strong>. PBKDF2-SHA-256 with 600,000 iterations.
+                </div>
+
+            </div>
+
+            <div>
+
+                <button
+                    onclick="runEncryption()"
+                    id="btnStep3"
+                    disabled
+                    class="w-full bg-slate-700 text-slate-400 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-60">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-5 h-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+
+                    Step 3 - Start encryption pipeline
+
+                </button>
+
+            </div>
+
+            <div
+                id="resultActionsCripta"
+                class="hidden p-4 bg-slate-950 border border-emerald-500/30 rounded-xl space-y-2">
+
+                <div class="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                    ✓ Processing completed successfully!
+                </div>
+
+                <div
+                    id="folderContentsCripta"
+                    class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded-lg border border-slate-800">
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- DECRYPTION SECTION -->
+        <!-- ========================= -->
+
+        <div id="sectionDecripta" class="space-y-6 hidden">
+
+            <div class="space-y-2">
+
+                <input
+                    type="file"
+                    id="inputContainers"
+                    multiple
+                    accept=".m22c,.zip,.jpg,.jpeg"
+                    onchange="updateDecryptStep1Status()"
+                    class="hidden">
+
+                <button
+                    type="button"
+                    onclick="startContainerSelection()"
+                    id="btnStep1D"
+                    class="w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between">
+
+                    <span class="flex items-center gap-2">
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        </svg>
+
+                        Step 1 - Select M22C containers or camouflage images
+
+                    </span>
+
+                    <span
+                        id="btnStep1DBadge"
+                        class="text-xs bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-md font-semibold">
+                        0 selected
+                    </span>
+
+                </button>
+
+            </div>
+
+            <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-4 space-y-4">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Password 1
+                        </label>
+
+                        <input
+                            type="password"
+                            id="dPass1"
+                            value="123"
+                            autocomplete="current-password"
+                            placeholder="Password 1"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Password 2
+                        </label>
+
+                        <input
+                            type="password"
+                            id="dPass2"
+                            value="456"
+                            autocomplete="current-password"
+                            placeholder="Password 2"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            Password 3
+                        </label>
+
+                        <input
+                            type="password"
+                            id="dPass3"
+                            value="789"
+                            autocomplete="current-password"
+                            placeholder="Password 3"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                </div>
+
+                <div class="pt-1">
+
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        Output Folder
+                    </label>
+
+                    <button
+                        type="button"
+                        onclick="chooseDecryptOutputFolder()"
+                        id="btnStep2D"
+                        class="w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-2.5 px-3 rounded-xl shadow transition duration-200 flex items-center justify-between text-xs">
+
+                        <span class="truncate flex items-center gap-1.5">
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-4 h-4 shrink-0"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            </svg>
+
+                            <span id="btnStep2DText">Select folder (optional in fallback)</span>
+
+                        </span>
+
+                        <span
+                            id="btnStep2DBadge"
+                            class="shrink-0 bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-semibold ml-2">
+                            Not set
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-4">
+
+                <div class="flex items-start gap-2">
+
+                    <input
+                        type="checkbox"
+                        id="deleteContainersAfter"
+                        class="w-4 h-4 mt-0.5 accent-emerald-400 cursor-pointer">
+
+                    <label
+                        for="deleteContainersAfter"
+                        class="text-sm text-slate-300 cursor-pointer">
+                        Delete all original containers when finished.
+                    </label>
+
+                </div>
+
+                <p
+                    id="deleteUnsupportedNote"
+                    class="text-xs text-amber-400 mt-2 pl-6 hidden">
+                    Automatic deletion requires the File System Access API.
+                </p>
+
+            </div>
+
+            <div>
+
+                <button
+                    onclick="runDecryption()"
+                    id="btnStep3D"
+                    disabled
+                    class="w-full bg-slate-700 text-slate-400 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-60">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-5 h-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+
+                    Step 3 - Extract & Recover File
+
+                </button>
+
+            </div>
+
+            <div
+                id="resultActionsDecripta"
+                class="hidden p-4 bg-slate-950 border border-emerald-500/30 rounded-xl space-y-2">
+
+                <div class="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                    ✓ File recovered and verified successfully!
+                </div>
+
+                <div
+                    id="folderContentsDecripta"
+                    class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded-lg border border-slate-800">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-8 space-y-3">
+
+            <div class="w-full bg-slate-900 rounded-full h-4 overflow-hidden border border-slate-700">
+
+                <div
+                    id="progressBar"
+                    class="bg-emerald-400 h-full w-0 transition-all duration-300">
+                </div>
+
+            </div>
+
+            <div
+                id="statusLog"
+                class="bg-slate-950 font-mono text-xs text-slate-400 p-3 rounded-xl h-28 overflow-y-auto border border-slate-800">
+                Ready for processing...
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="mt-8 text-center text-xs text-slate-500 flex items-center justify-center gap-3">
+
+        <span>
+            Powered by
+            <a
+                href="https://cruelben.github.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-emerald-400 hover:underline font-medium">
+                Benevolo B.
+            </a>
+        </span>
+
+        <span>•</span>
+
+        <span>M22C v2</span>
+
+    </footer>
+
+    <script>
+        "use strict";
+
+        /*
+         * M22C SECURE SUITE v2
+         *
+         * Main changes:
+         * 1) Correct browser fallback: la cartella output è obbligatoria solo
+         *    when the File System Access API is available.
+         * 2) All application randomness uses crypto.getRandomValues().
+         * 3) Fisher-Yates uses rejection sampling to avoid modulo bias.
+         * 4) M22C v2 format with versioned KDF: PBKDF2-SHA-256, 600,000 iterations.
+         *    A legacy v1 read mode with 210,000 iterations is also available.
+         * 5) Strict validation: at least 3 containers, 64 logical fragments, no
+         *    duplicates/missing; fragments may be split into physical parts.
+         * 6) SHA-256 of the actually encrypted payload stored in the v2 manifest
+         *    e verified after reconstruction.
+         * 7) Non-default option "Try to remove metadata before encryption":
+         *    best-effort in-memory sanitization for supported image formats.
+         *    The original file is never modified.
+         */
+
+        const FORMAT_VERSION = 2;
+
+        const KDF = {
+            name: "PBKDF2",
+            hash: "SHA-256",
+            iterations: 600000,
+            saltLength: 16,
+            ivLength: 12
+        };
+
+        // Compatibility with containers produced by the previous format.
+        const LEGACY_KDF_ITERATIONS = 210000;
+
+        const REQUIRED_FRAGMENT_COUNT = 64;
+        const MIN_CONTAINER_COUNT = 3;
+        const MAX_CONTAINER_SIZE_HARD_MB = 4096;
+
+        // Camouflage JPEG: the M22C payload is appended after the original JPEG.
+        // The JPEG remains normally viewable; M22C recognizes the trailer using
+        // magic + length and recovers the original container.
+        const CAMOUFLAGE_MAGIC = new TextEncoder().encode("M22C-JPEG-PAYLOAD-V1");
+        const CAMOUFLAGE_TRAILER_BYTES = CAMOUFLAGE_MAGIC.length + 8;
+
+        const fsAccessSupported =
+            ("showDirectoryPicker" in window) &&
+            ("showOpenFilePicker" in window);
+
+        let outputDirHandle = null;
+        let outputDirHandleDecrypt = null;
+        let containerHandles = [];
+
+        function log(msg) {
+            const box = document.getElementById("statusLog");
+            const div = document.createElement("div");
+            div.textContent = "> " + msg;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function setProgress(percent) {
+            document.getElementById("progressBar").style.width = percent + "%";
+        }
+
+        function setButtonState(button, enabled) {
+            button.disabled = !enabled;
+
+            if (enabled) {
+                button.className =
+                    "w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-pointer opacity-100";
+            } else {
+                button.className =
+                    "w-full bg-slate-700 text-slate-400 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-60";
+            }
+        }
+
+        function bytesToHex(bytes) {
+            return Array.from(bytes, byte =>
+                byte.toString(16).padStart(2, "0")
+            ).join("");
+        }
+
+        async function sha256Hex(dataBytes) {
+            const digest = await crypto.subtle.digest("SHA-256", dataBytes);
+            return bytesToHex(new Uint8Array(digest));
+        }
+
+        function constantTimeStringEqual(a, b) {
+            if (typeof a !== "string" || typeof b !== "string") {
+                return false;
+            }
+
+            if (a.length !== b.length) {
+                return false;
+            }
+
+            let result = 0;
+
+            for (let i = 0; i < a.length; i++) {
+                result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+            }
+
+            return result === 0;
+        }
+
+        function randomUint32() {
+            const buffer = new Uint32Array(1);
+            crypto.getRandomValues(buffer);
+            return buffer[0];
+        }
+
+        // Uniform random integer in [0, maxExclusive), without modulo bias.
+        function randomInt(maxExclusive) {
+            if (!Number.isSafeInteger(maxExclusive) || maxExclusive <= 0) {
+                throw new Error("Invalid randomInt parameter.");
+            }
+
+            const UINT32_RANGE = 0x100000000;
+            const limit =
+                UINT32_RANGE -
+                (UINT32_RANGE % maxExclusive);
+
+            let value;
+
+            do {
+                value = randomUint32();
+            } while (value >= limit);
+
+            return value % maxExclusive;
+        }
+
+        function generateRandomString(lunghezza = 8) {
+            const chars =
+                "abcdefghijklmnopqrstuvwxyz0123456789";
+
+            let result = "";
+
+            for (let i = 0; i < lunghezza; i++) {
+                result += chars[randomInt(chars.length)];
+            }
+
+            return result;
+        }
+
+        function cryptoShuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = randomInt(i + 1);
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function sanitizeFileName(name) {
+            let safe = String(name ?? "")
+                .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "_")
+                .trim();
+
+            safe = safe.replace(/^\.+$/, "_");
+
+            if (!safe) {
+                safe = "recovered.bin";
+            }
+
+            return safe;
+        }
+
+        /*
+         * Sanitization best-effort dei metadata.
+         *
+         * IMPORTANTE:
+         * - lavora sempre su una copia in memoria;
+         * - non modify the original File selezionato dall'utente;
+         * - does not promise complete metadata removal;
+         * - returns the original bytes for unsupported formats and reports this.
+         */
+        function getFileExtension(name) {
+            const match = String(name || "").toLowerCase().match(/\.([a-z0-9]+)$/);
+            return match ? match[1] : "";
+        }
+
+        function isJpegSignature(bytes) {
+            return bytes && bytes.length >= 2 && bytes[0] === 0xFF && bytes[1] === 0xD8;
+        }
+
+        function isPngSignature(bytes) {
+            if (!bytes || bytes.length < 8) return false;
+            const signature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+            return signature.every((value, index) => bytes[index] === value);
+        }
+
+        function concatBytesForMetadata(...arrays) {
+            const total = arrays.reduce((sum, arr) => sum + arr.length, 0);
+            const result = new Uint8Array(total);
+            let offset = 0;
+            for (const arr of arrays) {
+                result.set(arr, offset);
+                offset += arr.length;
+            }
+            return result;
+        }
+
+        function fourAscii(bytes, offset) {
+            return String.fromCharCode(
+                bytes[offset],
+                bytes[offset + 1],
+                bytes[offset + 2],
+                bytes[offset + 3]
+            );
+        }
+
+        function sanitizeJpegMetadata(bytes) {
+            if (!isJpegSignature(bytes)) {
+                return { bytes, changed: false, supported: false, method: "JPEG" };
+            }
+
+            const output = [bytes.slice(0, 2)];
+            let offset = 2;
+            let removed = 0;
+
+            while (offset < bytes.length) {
+                if (bytes[offset] !== 0xFF) {
+                    // After SOS, the rest of the JPEG contains compressed data: do not parse it.
+                    output.push(bytes.slice(offset));
+                    break;
+                }
+
+                let markerOffset = offset;
+                while (offset < bytes.length && bytes[offset] === 0xFF) offset++;
+                if (offset >= bytes.length) {
+                    output.push(bytes.slice(markerOffset));
+                    break;
+                }
+
+                const marker = bytes[offset++];
+
+                // FF D9 = EOI, FF DA = SOS. Da SOS in poi copiamo tutto senza modifiche.
+                if (marker === 0xD9) {
+                    output.push(bytes.slice(markerOffset, offset));
+                    break;
+                }
+                if (marker === 0xDA) {
+                    output.push(bytes.slice(markerOffset));
+                    break;
+                }
+
+                // Marker without a length segment.
+                if (marker === 0x01 || (marker >= 0xD0 && marker <= 0xD7)) {
+                    output.push(bytes.slice(markerOffset, offset));
+                    continue;
+                }
+
+                if (offset + 2 > bytes.length) {
+                    throw new Error("Invalid or truncated JPEG while reading segments.");
+                }
+
+                const segmentLength = (bytes[offset] << 8) | bytes[offset + 1];
+                if (segmentLength < 2 || offset + segmentLength > bytes.length) {
+                    throw new Error("Invalid JPEG: segment with invalid length.");
+                }
+
+                const segmentEnd = offset + segmentLength;
+                const isMetadataSegment =
+                    marker === 0xE1 || // EXIF / XMP
+                    marker === 0xED || // IPTC / Photoshop IRB
+                    marker === 0xFE;   // Commento JPEG
+
+                if (isMetadataSegment) {
+                    removed++;
+                } else {
+                    output.push(bytes.slice(markerOffset, segmentEnd));
+                }
+
+                offset = segmentEnd;
+            }
+
+            const result = concatBytesForMetadata(...output);
+            return {
+                bytes: result,
+                changed: removed > 0,
+                supported: true,
+                method: removed > 0
+                    ? "JPEG: rimossi segmenti EXIF/XMP/IPTC/commenti individuati"
+                    : "JPEG: no segmento EXIF/XMP/IPTC/commento individuato"
+            };
+        }
+
+        function sanitizePngMetadata(bytes) {
+            if (!isPngSignature(bytes)) {
+                return { bytes, changed: false, supported: false, method: "PNG" };
+            }
+
+            const output = [bytes.slice(0, 8)];
+            let offset = 8;
+            let removed = 0;
+
+            const removableChunks = new Set([
+                "eXIf",
+                "tEXt",
+                "zTXt",
+                "iTXt",
+                "tIME",
+                "pHYs",
+                "cHRM",
+                "gAMA",
+                "sRGB",
+                "iCCP"
+            ]);
+
+            while (offset < bytes.length) {
+                if (offset + 12 > bytes.length) {
+                    throw new Error("Invalid or truncated PNG while reading chunks.");
+                }
+
+                const length = (
+                    bytes[offset] * 0x1000000 +
+                    (bytes[offset + 1] << 16) +
+                    (bytes[offset + 2] << 8) +
+                    bytes[offset + 3]
+                );
+
+                const chunkEnd = offset + 12 + length;
+                if (chunkEnd > bytes.length) {
+                    throw new Error("Invalid PNG: invalid chunk length.");
+                }
+
+                const type = fourAscii(bytes, offset + 4);
+                if (removableChunks.has(type)) {
+                    removed++;
+                } else {
+                    output.push(bytes.slice(offset, chunkEnd));
+                }
+
+                offset = chunkEnd;
+                if (type === "IEND") break;
+            }
+
+            if (offset < bytes.length) output.push(bytes.slice(offset));
+
+            const result = concatBytesForMetadata(...output);
+            return {
+                bytes: result,
+                changed: removed > 0,
+                supported: true,
+                method: removed > 0
+                    ? "PNG: detected metadata chunks removed"
+                    : "PNG: no removable metadata chunks detected"
+            };
+        }
+
+        async function tryRemoveMetadata(file, rawBytes) {
+            const extension = getFileExtension(file.name);
+            const mime = String(file.type || "").toLowerCase();
+
+            try {
+                if (extension === "jpg" || extension === "jpeg" || mime === "image/jpeg") {
+                    return sanitizeJpegMetadata(rawBytes);
+                }
+
+                if (extension === "png" || mime === "image/png") {
+                    return sanitizePngMetadata(rawBytes);
+                }
+
+                return {
+                    bytes: rawBytes,
+                    changed: false,
+                    supported: false,
+                    method: "Format not supported for automatic metadata sanitization"
+                };
+            } catch (error) {
+                return {
+                    bytes: rawBytes,
+                    changed: false,
+                    supported: true,
+                    method: "Attempt failed: file left unchanged",
+                    error: error.message || String(error)
+                };
+            }
+        }
+
+        function passwordValida(password) {
+            return typeof password === "string" && password.length > 0;
+        }
+
+        function getEncryptionPasswords() {
+            const p1 = document.getElementById("pass1").value;
+            const p2 = document.getElementById("pass2").value;
+            const p3 = document.getElementById("pass3").value;
+
+            if (!passwordValida(p1) ||
+                !passwordValida(p2) ||
+                !passwordValida(p3)) {
+                throw new Error(
+                    "Inserisci tutte e tre le password."
+                );
+            }
+
+            return { p1, p2, p3 };
+        }
+
+        function getDecryptionPasswords() {
+            const p1 = document.getElementById("dPass1").value;
+            const p2 = document.getElementById("dPass2").value;
+            const p3 = document.getElementById("dPass3").value;
+
+            if (!passwordValida(p1) ||
+                !passwordValida(p2) ||
+                !passwordValida(p3)) {
+                throw new Error(
+                    "Inserisci tutte e tre le password."
+                );
+            }
+
+            return { p1, p2, p3 };
+        }
+
+        function buildManifestPassword(p1, p2, p3) {
+            return p1 + "_" + p2 + "_" + p3;
+        }
+
+        async function derivaChiaveAES(
+            password,
+            saltBytes,
+            iterations = KDF.iterations
+        ) {
+            const passKey = await crypto.subtle.importKey(
+                "raw",
+                new TextEncoder().encode(password),
+                { name: "PBKDF2" },
+                false,
+                ["deriveKey"]
+            );
+
+            return crypto.subtle.deriveKey(
+                {
+                    name: "PBKDF2",
+                    salt: saltBytes,
+                    iterations,
+                    hash: "SHA-256"
+                },
+                passKey,
+                {
+                    name: "AES-GCM",
+                    length: 256
+                },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        async function encryptData(
+            datiBytes,
+            password,
+            iterations = KDF.iterations
+        ) {
+            if (
+                !datiBytes ||
+                datiBytes.length === 0
+            ) {
+                return new Uint8Array(0);
+            }
+
+            const salt =
+                crypto.getRandomValues(
+                    new Uint8Array(KDF.saltLength)
+                );
+
+            const iv =
+                crypto.getRandomValues(
+                    new Uint8Array(KDF.ivLength)
+                );
+
+            const key =
+                await derivaChiaveAES(
+                    password,
+                    salt,
+                    iterations
+                );
+
+            const encryptedBuffer =
+                await crypto.subtle.encrypt(
+                    {
+                        name: "AES-GCM",
+                        iv
+                    },
+                    key,
+                    datiBytes
+                );
+
+            const encryptedBytes =
+                new Uint8Array(encryptedBuffer);
+
+            const output =
+                new Uint8Array(
+                    KDF.saltLength +
+                    KDF.ivLength +
+                    encryptedBytes.length
+                );
+
+            output.set(salt, 0);
+            output.set(iv, KDF.saltLength);
+            output.set(
+                encryptedBytes,
+                KDF.saltLength + KDF.ivLength
+            );
+
+            return output;
+        }
+
+        async function decryptData(
+            datiCombinati,
+            password,
+            iterations = KDF.iterations
+        ) {
+            if (
+                !datiCombinati ||
+                datiCombinati.length === 0
+            ) {
+                return new Uint8Array(0);
+            }
+
+            const minLength =
+                KDF.saltLength +
+                KDF.ivLength;
+
+            if (datiCombinati.length < minLength) {
+                throw new Error(
+                    "Blocco troppo corto o corrotto."
+                );
+            }
+
+            const salt =
+                datiCombinati.slice(
+                    0,
+                    KDF.saltLength
+                );
+
+            const iv =
+                datiCombinati.slice(
+                    KDF.saltLength,
+                    KDF.saltLength + KDF.ivLength
+                );
+
+            const ciphertext =
+                datiCombinati.slice(
+                    KDF.saltLength + KDF.ivLength
+                );
+
+            const key =
+                await derivaChiaveAES(
+                    password,
+                    salt,
+                    iterations
+                );
+
+            const plainBuffer =
+                await crypto.subtle.decrypt(
+                    {
+                        name: "AES-GCM",
+                        iv
+                    },
+                    key,
+                    ciphertext
+                );
+
+            return new Uint8Array(plainBuffer);
+        }
+
+        function splitIntoFour(dati) {
+            const totalLen = dati.length;
+
+            const qSize =
+                Math.floor(totalLen / 4);
+
+            const remSize =
+                totalLen % 4;
+
+            const l1 =
+                qSize + (remSize > 0 ? 1 : 0);
+
+            const l2 =
+                qSize + (remSize > 1 ? 1 : 0);
+
+            const l3 =
+                qSize + (remSize > 2 ? 1 : 0);
+
+            const l4 =
+                totalLen - (l1 + l2 + l3);
+
+            return [
+                dati.subarray(0, l1),
+                dati.subarray(l1, l1 + l2),
+                dati.subarray(l1 + l2, l1 + l2 + l3),
+                dati.subarray(l1 + l2 + l3, totalLen)
+            ];
+        }
+
+        function mergeFour(
+            b1,
+            b2,
+            b3,
+            b4
+        ) {
+            if (
+                !(b1 instanceof Uint8Array) ||
+                !(b2 instanceof Uint8Array) ||
+                !(b3 instanceof Uint8Array) ||
+                !(b4 instanceof Uint8Array)
+            ) {
+                throw new Error(
+                    "Missing or invalid fragment."
+                );
+            }
+
+            const result =
+                new Uint8Array(
+                    b1.length +
+                    b2.length +
+                    b3.length +
+                    b4.length
+                );
+
+            result.set(b1, 0);
+
+            result.set(
+                b2,
+                b1.length
+            );
+
+            result.set(
+                b3,
+                b1.length +
+                b2.length
+            );
+
+            result.set(
+                b4,
+                b1.length +
+                b2.length +
+                b3.length
+            );
+
+            return result;
+        }
+
+        function handleNamingSelection() {
+            const value =
+                document.getElementById(
+                    "namingStyle"
+                ).value;
+
+            const box =
+                document.getElementById(
+                    "customNamingBox"
+                );
+
+            if (value === "custom") {
+                box.classList.remove("hidden");
+            } else {
+                box.classList.add("hidden");
+            }
+        }
+
+        function handleCamouflageUI() {
+            const enabled = document.getElementById("enableCamouflage").checked;
+            const options = document.getElementById("camouflageOptions");
+            if (enabled) {
+                options.classList.remove("hidden");
+            } else {
+                options.classList.add("hidden");
+            }
+            handleCamouflageSource();
+            checkStep3Status();
+        }
+
+        function handleCamouflageSource() {
+            const source = document.getElementById("camouflageSource").value;
+            const singleBox = document.getElementById("camouflageSingleBox");
+            const multipleBox = document.getElementById("camouflageMultipleBox");
+
+            singleBox.classList.toggle("hidden", source !== "single");
+            multipleBox.classList.toggle("hidden", source !== "multiple");
+        }
+
+        function getCamouflageSettings() {
+            const enabled = document.getElementById("enableCamouflage").checked;
+            if (!enabled) return { enabled: false, source: "none", namingStyle: "random" };
+
+            const source = document.getElementById("camouflageSource").value;
+            const namingStyle = document.getElementById("camouflageNamingStyle").value;
+
+            return { enabled: true, source, namingStyle };
+        }
+
+        function buildCamouflageNames(count, namingStyle) {
+            const width = Math.max(2, String(count).length);
+            if (namingStyle === "ordered") {
+                return Array.from({ length: count }, (_, i) =>
+                    "IMG-" + String(i + 1).padStart(width, "0") + ".jpg"
+                );
+            }
+
+            return Array.from({ length: count }, () =>
+                "IMG_" + generateRandomString(8) + ".jpg"
+            );
+        }
+
+        function isJpegBytes(bytes) {
+            return bytes instanceof Uint8Array &&
+                bytes.length >= 4 &&
+                bytes[0] === 0xFF &&
+                bytes[1] === 0xD8 &&
+                bytes[bytes.length - 2] === 0xFF &&
+                bytes[bytes.length - 1] === 0xD9;
+        }
+
+        async function fileToJpegBytes(file) {
+            const bytes = new Uint8Array(await file.arrayBuffer());
+            if (!isJpegBytes(bytes)) {
+                throw new Error("The selected file does not appear to be a valid JPEG: " + file.name);
+            }
+            return bytes;
+        }
+
+        function bytesEqualAt(source, offset, pattern) {
+            if (offset < 0 || offset + pattern.length > source.length) return false;
+            for (let i = 0; i < pattern.length; i++) {
+                if (source[offset + i] !== pattern[i]) return false;
+            }
+            return true;
+        }
+
+        function findCamouflagePayload(jpegBytes) {
+            if (!(jpegBytes instanceof Uint8Array) || jpegBytes.length < CAMOUFLAGE_TRAILER_BYTES) {
+                return null;
+            }
+
+            // Search from the end to greatly reduce the risk of confusing
+            // eventuali sequenze uguali presenti casualmente nel JPEG o nel payload.
+            for (let pos = jpegBytes.length - CAMOUFLAGE_TRAILER_BYTES; pos >= 0; pos--) {
+                if (!bytesEqualAt(jpegBytes, pos, CAMOUFLAGE_MAGIC)) continue;
+
+                const lengthOffset = pos + CAMOUFLAGE_MAGIC.length;
+                const view = new DataView(
+                    jpegBytes.buffer,
+                    jpegBytes.byteOffset + lengthOffset,
+                    8
+                );
+                const payloadLengthBig = view.getBigUint64(0, true);
+                if (payloadLengthBig > BigInt(Number.MAX_SAFE_INTEGER)) continue;
+
+                const payloadLength = Number(payloadLengthBig);
+                const payloadStart = lengthOffset + 8;
+                if (payloadStart + payloadLength !== jpegBytes.length) continue;
+
+                const jpegCore = jpegBytes.subarray(0, pos);
+                if (!isJpegBytes(jpegCore)) continue;
+
+                return jpegBytes.subarray(payloadStart);
+            }
+
+            return null;
+        }
+
+        async function unwrapContainerSource(sourceFile) {
+            const rawBytes = new Uint8Array(await sourceFile.arrayBuffer());
+
+            // Prima proviamo direttamente come ZIP/M22C normale.
+            try {
+                const zip = new JSZip();
+                const zipContent = await zip.loadAsync(rawBytes);
+                if (zipContent && Object.keys(zipContent.files).length > 0) {
+                    return { bytes: rawBytes, camouflage: false };
+                }
+            } catch (_) {
+                // Non è un ZIP diretto: potrebbe essere un JPEG camouflage.
+            }
+
+            const payload = findCamouflagePayload(rawBytes);
+            if (!payload) {
+                throw new Error("The file '" + sourceFile.name + "' is neither a valid M22C container nor a recognized camouflage image.");
+            }
+
+            return { bytes: payload, camouflage: true };
+        }
+
+        function concatUint8Arrays(...arrays) {
+            const totalLength = arrays.reduce((sum, arr) => sum + arr.length, 0);
+            const result = new Uint8Array(totalLength);
+            let offset = 0;
+            for (const arr of arrays) {
+                result.set(arr, offset);
+                offset += arr.length;
+            }
+            return result;
+        }
+
+        function buildCamouflageTrailer(payloadBytes) {
+            const lengthBytes = new Uint8Array(8);
+            new DataView(lengthBytes.buffer).setBigUint64(
+                0,
+                BigInt(payloadBytes.length),
+                true
+            );
+            return { magic: CAMOUFLAGE_MAGIC, lengthBytes };
+        }
+
+        async function embedContainerInJpeg(containerBlob, jpegBytes) {
+            if (!isJpegBytes(jpegBytes)) {
+                throw new Error("The camouflage image is not a valid JPEG.");
+            }
+
+            const payloadBytes = new Uint8Array(await containerBlob.arrayBuffer());
+            const trailer = buildCamouflageTrailer(payloadBytes);
+            return concatUint8Arrays(jpegBytes, trailer.magic, trailer.lengthBytes, payloadBytes);
+        }
+
+        function randomColorTriplet() {
+            return [randomInt(256), randomInt(256), randomInt(256)];
+        }
+
+        async function generateAutomaticJpeg(index, total) {
+            const canvas = document.createElement("canvas");
+            canvas.width = 640;
+            canvas.height = 480;
+            const ctx = canvas.getContext("2d", { alpha: false });
+            if (!ctx) throw new Error("Unable to create the graphics generator for camouflage images.");
+
+            const [r1, g1, b1] = randomColorTriplet();
+            const [r2, g2, b2] = randomColorTriplet();
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, `rgb(${r1}, ${g1}, ${b1})`);
+            gradient.addColorStop(1, `rgb(${r2}, ${g2}, ${b2})`);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Different visual pattern for each image, without adding M22C metadata.
+            const [or, og, ob] = randomColorTriplet();
+            ctx.globalAlpha = 0.18;
+            ctx.fillStyle = `rgb(${or}, ${og}, ${ob})`;
+            const step = 36 + randomInt(45);
+            for (let x = -canvas.height; x < canvas.width + canvas.height; x += step) {
+                ctx.save();
+                ctx.translate(x, 0);
+                ctx.rotate(-0.35 + (index / Math.max(1, total)) * 0.7);
+                ctx.fillRect(0, -100, 18 + randomInt(22), 700);
+                ctx.restore();
+            }
+
+            ctx.globalAlpha = 0.08;
+            for (let i = 0; i < 180; i++) {
+                ctx.beginPath();
+                ctx.arc(randomInt(canvas.width), randomInt(canvas.height), 1 + randomInt(8), 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+
+            const blob = await new Promise((resolve, reject) => {
+                canvas.toBlob(
+                    b => b ? resolve(b) : reject(new Error("Unable to generate a JPEG image.")),
+                    "image/jpeg",
+                    0.82
+                );
+            });
+
+            const bytes = new Uint8Array(await blob.arrayBuffer());
+            if (!isJpegBytes(bytes)) throw new Error("The generator did not produce a valid JPEG.");
+            return bytes;
+        }
+
+        async function prepareCamouflageImages(settings, count) {
+            if (!settings.enabled) return null;
+
+            if (settings.source === "auto") {
+                const images = [];
+                for (let i = 0; i < count; i++) {
+                    log("Generating camouflage image " + (i + 1) + "/" + count + "...");
+                    images.push(await generateAutomaticJpeg(i, count));
+                }
+                return images;
+            }
+
+            if (settings.source === "single") {
+                const input = document.getElementById("camouflageSingleInput");
+                if (!input.files || input.files.length !== 1) {
+                    throw new Error("Select exactly one JPG image for camouflage.");
+                }
+                const bytes = await fileToJpegBytes(input.files[0]);
+                return Array.from({ length: count }, () => bytes);
+            }
+
+            if (settings.source === "multiple") {
+                const input = document.getElementById("camouflageMultipleInput");
+                if (!input.files || input.files.length !== count) {
+                    throw new Error("With the 'one image per container' mode, you must select exactly " + count + " JPG images.");
+                }
+                const files = Array.from(input.files);
+                const images = [];
+                for (const file of files) images.push(await fileToJpegBytes(file));
+                return images;
+            }
+
+            throw new Error("Invalid camouflage source.");
+        }
+
+        function switchTab(tab) {
+            const secC =
+                document.getElementById(
+                    "sectionCripta"
+                );
+
+            const secD =
+                document.getElementById(
+                    "sectionDecripta"
+                );
+
+            const btnC =
+                document.getElementById(
+                    "btnTabCripta"
+                );
+
+            const btnD =
+                document.getElementById(
+                    "btnTabDecripta"
+                );
+
+            if (tab === "cripta") {
+                secC.classList.remove("hidden");
+                secD.classList.add("hidden");
+
+                btnC.className =
+                    "flex-1 py-3 font-semibold text-center border-b-2 border-emerald-400 text-emerald-400 transition";
+
+                btnD.className =
+                    "flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition";
+            } else {
+                secC.classList.add("hidden");
+                secD.classList.remove("hidden");
+
+                btnD.className =
+                    "flex-1 py-3 font-semibold text-center border-b-2 border-emerald-400 text-emerald-400 transition";
+
+                btnC.className =
+                    "flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition";
+            }
+        }
+
+        function updateStep1Status() {
+            const input =
+                document.getElementById("inputFile");
+
+            const button =
+                document.getElementById("btnStep1");
+
+            const badge =
+                document.getElementById(
+                    "btnStep1Badge"
+                );
+
+            if (input.files && input.files.length > 0) {
+                button.className =
+                    "w-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between";
+
+                badge.className =
+                    "text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-md font-semibold truncate max-w-[200px]";
+
+                badge.textContent =
+                    "✓ " + input.files[0].name;
+            } else {
+                button.className =
+                    "w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between";
+
+                badge.className =
+                    "text-xs bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-md font-semibold";
+
+                badge.textContent =
+                    "No file selected";
+            }
+
+            checkStep3Status();
+        }
+
+        async function chooseOutputFolderLegacy() {
+            if (!fsAccessSupported) {
+                log(
+                    "File System Access API unavailable: the standard browser download will be used."
+                );
+                return;
+            }
+
+            try {
+                outputDirHandle =
+                    await window.showDirectoryPicker();
+
+                const btn =
+                    document.getElementById(
+                        "btnStep2"
+                    );
+
+                const badge =
+                    document.getElementById(
+                        "btnStep2Badge"
+                    );
+
+                btn.className =
+                    "w-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-2 px-3 rounded-xl shadow transition duration-200 flex items-center justify-between text-xs";
+
+                badge.className =
+                    "shrink-0 bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-semibold ml-2 truncate max-w-[150px]";
+
+                badge.textContent =
+                    "✓ " + outputDirHandle.name;
+
+                checkStep3Status();
+
+            } catch (e) {
+                log(
+                    "Folder selection cancelled."
+                );
+            }
+        }
+
+        function chooseOutputFolder() {
+            chooseOutputFolderLegacy();
+        }
+
+        function checkStep3Status() {
+            const input =
+                document.getElementById(
+                    "inputFile"
+                );
+
+            const button =
+                document.getElementById(
+                    "btnStep3"
+                );
+
+            const hasFile =
+                Boolean(
+                    input.files &&
+                    input.files.length > 0
+                );
+
+            const maxMB = Number(document.getElementById("containerMaxMB").value);
+            const maxReady = Number.isFinite(maxMB) && maxMB >= 1 && maxMB <= MAX_CONTAINER_SIZE_HARD_MB;
+
+            const outputReady =
+                !fsAccessSupported ||
+                outputDirHandle !== null;
+
+            setButtonState(
+                button,
+                hasFile && outputReady && maxReady
+            );
+        }
+
+        async function startContainerSelection() {
+            if (fsAccessSupported) {
+                try {
+                    containerHandles =
+                        await window.showOpenFilePicker({
+                            multiple: true,
+                            types: [
+                                {
+                                    description:
+                                        "Container M22C o immagini camouflage",
+                                    accept: {
+                                        "application/zip": [
+                                            ".m22c",
+                                            ".zip"
+                                        ],
+                                        "image/jpeg": [
+                                            ".jpg",
+                                            ".jpeg"
+                                        ]
+                                    }
+                                }
+                            ]
+                        });
+
+                    // For consistency, if the user selects more than 3 files
+                    // manteniamo la selezione e leave validation to
+                    // reject it.
+                    updateDecryptStep1Status();
+
+                } catch (e) {
+                    log(
+                        "Container selection cancelled."
+                    );
+                }
+
+            } else {
+                document
+                    .getElementById(
+                        "inputContainers"
+                    )
+                    .click();
+            }
+        }
+
+        function getDecryptContainerCount() {
+            const fallbackInput = document.getElementById("inputContainers");
+
+            return containerHandles.length > 0
+                ? containerHandles.length
+                : (fallbackInput.files ? fallbackInput.files.length : 0);
+        }
+
+        function updateDecryptStep1Status() {
+            const button = document.getElementById("btnStep1D");
+            const badge = document.getElementById("btnStep1DBadge");
+            const count = getDecryptContainerCount();
+
+            if (count >= MIN_CONTAINER_COUNT) {
+                button.className =
+                    "w-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between";
+                badge.className =
+                    "text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-md font-semibold";
+            } else {
+                button.className =
+                    "w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between";
+                badge.className =
+                    "text-xs bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-md font-semibold";
+            }
+
+            badge.textContent = count + " selected";
+            checkDecryptStep3Status();
+        }
+
+        async function chooseDecryptOutputFolderLegacy() {
+            if (!fsAccessSupported) {
+                log(
+                    "File System Access API unavailable: the standard browser download will be used."
+                );
+                return;
+            }
+
+            try {
+
+                outputDirHandleDecrypt =
+                    await window.showDirectoryPicker();
+
+                const btn =
+                    document.getElementById(
+                        "btnStep2D"
+                    );
+
+                const badge =
+                    document.getElementById(
+                        "btnStep2DBadge"
+                    );
+
+                btn.className =
+                    "w-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-2.5 px-3 rounded-xl shadow transition duration-200 flex items-center justify-between text-xs";
+
+                badge.className =
+                    "shrink-0 bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-semibold ml-2 truncate max-w-[150px]";
+
+                badge.textContent =
+                    "✓ " +
+                    outputDirHandleDecrypt.name;
+
+                checkDecryptStep3Status();
+
+            } catch (e) {
+                log(
+                    "Folder selection cancelled."
+                );
+            }
+        }
+
+        function chooseDecryptOutputFolder() {
+            chooseDecryptOutputFolderLegacy();
+        }
+
+        function checkDecryptStep3Status() {
+            const button =
+                document.getElementById(
+                    "btnStep3D"
+                );
+
+            const count =
+                getDecryptContainerCount();
+
+            const outputReady =
+                !fsAccessSupported ||
+                outputDirHandleDecrypt !== null;
+
+            setButtonState(
+                button,
+                count >= MIN_CONTAINER_COUNT &&
+                outputReady
+            );
+        }
+
+        function getContainerSelection() {
+            const result = [];
+
+            if (containerHandles.length > 0) {
+                for (const handle of containerHandles) {
+                    result.push({
+                        name: handle.name,
+                        filePromise: handle.getFile(),
+                        handle
+                    });
+                }
+
+                return result;
+            }
+
+            const input =
+                document.getElementById(
+                    "inputContainers"
+                );
+
+            for (const file of input.files) {
+                result.push({
+                    name: file.name,
+                    filePromise: Promise.resolve(file),
+                    handle: null
+                });
+            }
+
+            return result;
+        }
+
+        function validateContainerCount(files) {
+            if (files.length < MIN_CONTAINER_COUNT) {
+                throw new Error(
+                    "At least " + MIN_CONTAINER_COUNT + " M22C containers or camouflage images are required."
+                );
+            }
+        }
+
+        function validateManifestV2(manifest) {
+            if (!manifest ||
+                typeof manifest !== "object") {
+                throw new Error(
+                    "Invalid v2 manifest."
+                );
+            }
+
+            if (manifest.version !== FORMAT_VERSION) {
+                throw new Error(
+                    "Unsupported M22C version: " +
+                    String(manifest.version)
+                );
+            }
+
+            if (
+                manifest.algorithm !==
+                "AES-256-GCM"
+            ) {
+                throw new Error(
+                    "Unrecognized M22C algorithm."
+                );
+            }
+
+            if (
+                !manifest.kdf ||
+                manifest.kdf.name !== "PBKDF2" ||
+                manifest.kdf.hash !== "SHA-256" ||
+                manifest.kdf.iterations !== KDF.iterations
+            ) {
+                throw new Error(
+                    "Invalid manifest KDF parameters."
+                );
+            }
+
+            if (
+                typeof manifest.originalName !==
+                "string" ||
+                !manifest.originalName.length
+            ) {
+                throw new Error(
+                    "Original filename missing."
+                );
+            }
+
+            if (
+                !Number.isSafeInteger(
+                    manifest.originalSize
+                ) ||
+                manifest.originalSize < 0
+            ) {
+                throw new Error(
+                    "Invalid original size."
+                );
+            }
+
+            if (
+                typeof manifest.sha256 !==
+                "string" ||
+                !/^[0-9a-f]{64}$/i.test(
+                    manifest.sha256
+                )
+            ) {
+                throw new Error(
+                    "Invalid manifest SHA-256 hash."
+                );
+            }
+
+            if (
+                !Array.isArray(
+                    manifest.fragments
+                ) ||
+                manifest.fragments.length !==
+                REQUIRED_FRAGMENT_COUNT
+            ) {
+                throw new Error(
+                    "The manifest must contain exactly 64 fragments."
+                );
+            }
+
+            const unique =
+                new Set(
+                    manifest.fragments
+                );
+
+            if (
+                unique.size !==
+                REQUIRED_FRAGMENT_COUNT
+            ) {
+                throw new Error(
+                    "The manifest contains duplicate fragments."
+                );
+            }
+
+            for (
+                const name of manifest.fragments
+            ) {
+                if (
+                    typeof name !== "string" ||
+                    !/^sec_[A-Za-z0-9]{4}_[0-9]{2}\.bin$/
+                        .test(name)
+                ) {
+                    throw new Error(
+                        "Invalid fragment name: " +
+                        String(name)
+                    );
+                }
+            }
+
+            return true;
+        }
+
+        function parseLegacyManifest(manifestText) {
+            const lines =
+                manifestText
+                    .split(/\r?\n/)
+                    .map(line => line.trim())
+                    .filter(Boolean);
+
+            if (
+                lines.length <
+                REQUIRED_FRAGMENT_COUNT + 1
+            ) {
+                throw new Error(
+                    "Incomplete legacy manifest."
+                );
+            }
+
+            const originalName =
+                lines[0];
+
+            const fragments =
+                lines.slice(
+                    1,
+                    REQUIRED_FRAGMENT_COUNT + 1
+                );
+
+            const unique =
+                new Set(fragments);
+
+            if (
+                fragments.length !==
+                REQUIRED_FRAGMENT_COUNT ||
+                unique.size !==
+                REQUIRED_FRAGMENT_COUNT
+            ) {
+                throw new Error(
+                    "Legacy manifest does not contain 64 distinct fragments."
+                );
+            }
+
+            return {
+                version: 1,
+                originalName,
+                originalSize: null,
+                sha256: null,
+                fragments
+            };
+        }
+
+        async function decryptManifest(
+            encryptedManifest,
+            manifestPassword
+        ) {
+            // Prima tentiamo il formato attuale.
+            try {
+                const bytes =
+                    await decryptData(
+                        encryptedManifest,
+                        manifestPassword,
+                        KDF.iterations
+                    );
+
+                const text =
+                    new TextDecoder().decode(bytes);
+
+                const manifest =
+                    JSON.parse(text);
+
+                validateManifestV2(manifest);
+
+                return {
+                    manifest,
+                    iterations: manifest.kdf.iterations
+                };
+
+            } catch (currentError) {
+
+                // Fallback esplicito alla v1.
+                try {
+
+                    const bytes =
+                        await decryptData(
+                            encryptedManifest,
+                            manifestPassword,
+                            LEGACY_KDF_ITERATIONS
+                        );
+
+                    const text =
+                        new TextDecoder().decode(bytes);
+
+                    const manifest =
+                        parseLegacyManifest(text);
+
+                    log(
+                        "Container legacy v1 riconosciuti (PBKDF2 210.000)."
+                    );
+
+                    return {
+                        manifest,
+                        iterations:
+                            LEGACY_KDF_ITERATIONS
+                    };
+
+                } catch (legacyError) {
+
+                    throw new Error(
+                        "Unable to decrypt the manifest: incorrect passwords or corrupted containers."
+                    );
+                }
+            }
+        }
+
+        async function extractContainers(filesToProcess) {
+            const extractedFiles = new Map();
+            const sourceContainers = new Set();
+
+            for (const item of filesToProcess) {
+                const sourceFile = await item.filePromise;
+                let zipContent;
+                try {
+                    const unwrapped = await unwrapContainerSource(sourceFile);
+                    const zip = new JSZip();
+                    zipContent = await zip.loadAsync(unwrapped.bytes);
+                    log(unwrapped.camouflage
+                        ? "Immagine camouflage riconosciuta: " + item.name
+                        : "Container M22C riconosciuto: " + item.name);
+                } catch (e) {
+                    if (e && e.message && e.message.includes("is not a valid M22C container")) throw e;
+                    throw new Error("The file '" + item.name + "' does not contain a valid M22C containers.");
+                }
+
+                for (const filename of Object.keys(zipContent.files)) {
+                    const entry = zipContent.files[filename];
+                    if (entry.dir) continue;
+                    if (extractedFiles.has(filename)) throw new Error("Duplicate file across containers: " + filename);
+                    const bytes = await entry.async("uint8array");
+                    extractedFiles.set(filename, bytes);
+                    sourceContainers.add(filename);
+                }
+            }
+
+            if (!extractedFiles.has("manifest_tree.dat")) throw new Error("manifest_tree.dat not found in the containers.");
+            return { extractedFiles, sourceContainers };
+        }
+
+        function reconstructDynamicFragments(extractedFiles, manifest) {
+            // I vecchi manifest v2 hanno direttamente i 64 filename .bin.
+            const hasDynamicParts = extractedFiles.has("manifest_tree.dat") &&
+                Array.from(extractedFiles.keys()).some(name => /__part_\d+\.bin$/i.test(name));
+
+            if (!hasDynamicParts) return extractedFiles;
+
+            const result = new Map(extractedFiles);
+            for (const logicalName of manifest.fragments) {
+                const prefix = logicalName.replace(/\.bin$/i, "") + "__part_";
+                const partNames = Array.from(extractedFiles.keys())
+                    .filter(name => name.startsWith(prefix) && /\.bin$/i.test(name))
+                    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+                if (partNames.length === 0) throw new Error("Missing parts for fragment: " + logicalName);
+
+                let total = 0;
+                for (const name of partNames) total += extractedFiles.get(name).length;
+                const merged = new Uint8Array(total);
+                let offset = 0;
+                for (const name of partNames) {
+                    const bytes = extractedFiles.get(name);
+                    merged.set(bytes, offset);
+                    offset += bytes.length;
+                }
+                result.set(logicalName, merged);
+            }
+            return result;
+        }
+
+        function validateFragmentsPresence(
+            extractedFiles,
+            fragmentNames
+        ) {
+            for (
+                const fragmentName of fragmentNames
+            ) {
+
+                if (
+                    !extractedFiles.has(
+                        fragmentName
+                    )
+                ) {
+
+                    throw new Error(
+                        "Missing fragment: " +
+                        fragmentName
+                    );
+                }
+            }
+        }
+
+        function validateManifestAgainstContainers(
+            extractedFiles,
+            manifest
+        ) {
+            const manifestSet =
+                new Set(manifest.fragments);
+
+            const hasDynamicParts =
+                Array.from(extractedFiles.keys()).some(
+                    name => /__part_\d+\.bin$/i.test(name)
+                );
+
+            if (!hasDynamicParts) {
+                // Previous format: all 64 logical fragments are present
+                // direttamente nei containers.
+                validateFragmentsPresence(
+                    extractedFiles,
+                    manifest.fragments
+                );
+            } else {
+                // Dynamic format: each logical fragment may be
+                // rappresentato da una o più physical parts.
+                for (const logicalName of manifest.fragments) {
+                    const prefix =
+                        logicalName.replace(/\.bin$/i, "") + "__part_";
+
+                    const partNames = Array.from(extractedFiles.keys())
+                        .filter(
+                            name =>
+                                name.startsWith(prefix) &&
+                                /\.bin$/i.test(name)
+                        );
+
+                    if (partNames.length === 0) {
+                        throw new Error(
+                            "Missing parts for fragment: " +
+                            logicalName
+                        );
+                    }
+                }
+            }
+
+            // Verifica che non ci siano oggetti sec_... estranei al manifesto.
+            // Nel formato dinamico sono validi i nomi sec_xxxx_YY__part_NNN.bin
+            // if the part belongs to one of the 64 declared fragments.
+            for (const filename of extractedFiles.keys()) {
+                if (
+                    !filename.startsWith("sec_") ||
+                    !filename.endsWith(".bin")
+                ) {
+                    continue;
+                }
+
+                if (manifestSet.has(filename)) {
+                    continue;
+                }
+
+                if (hasDynamicParts && /^(.*)__part_\d+\.bin$/i.test(filename)) {
+                    const match =
+                        filename.match(/^(.*)__part_\d+\.bin$/i);
+                    const logicalName =
+                        match ? match[1] + ".bin" : null;
+
+                    if (logicalName && manifestSet.has(logicalName)) {
+                        continue;
+                    }
+                }
+
+                throw new Error(
+                    "Fragment not declared in manifest: " +
+                    filename
+                );
+            }
+        }
+
+        async function saveBytesToDirectory(
+            directoryHandle,
+            filename,
+            bytes
+        ) {
+            if (!directoryHandle) {
+                return false;
+            }
+
+            const targetHandle =
+                await directoryHandle.getFileHandle(
+                    filename,
+                    { create: true }
+                );
+
+            const writable =
+                await targetHandle.createWritable();
+
+            try {
+                await writable.write(bytes);
+                await writable.close();
+            } catch (error) {
+                try {
+                    await writable.abort();
+                } catch (_) {}
+                throw error;
+            }
+
+            return true;
+        }
+
+        function downloadBytes(
+            filename,
+            bytes
+        ) {
+            const blob =
+                new Blob([bytes]);
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const link =
+                document.createElement("a");
+
+            link.href = url;
+            link.download = filename;
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            setTimeout(
+                () => URL.revokeObjectURL(url),
+                1000
+            );
+        }
+
+        function parseContainerMaxMB() {
+            const raw = Number(document.getElementById("containerMaxMB").value);
+            if (!Number.isFinite(raw) || raw < 1 || raw > MAX_CONTAINER_SIZE_HARD_MB) {
+                throw new Error("Invalid maximum container size. Enter a value between 1 and " + MAX_CONTAINER_SIZE_HARD_MB + " MB.");
+            }
+            return raw;
+        }
+
+        function buildContainerNames(count, namingStyle, prefix) {
+            const width = Math.max(2, String(count).length);
+            if (namingStyle === "random") {
+                return Array.from({ length: count }, () => generateRandomString(8) + ".m22c");
+            }
+
+            const safePrefix = (prefix || "M22C")
+                .replace(/[^a-zA-Z0-9_.-]/g, "_")
+                .replace(/\.m22c$/i, "") || "M22C";
+
+            return Array.from({ length: count }, (_, i) =>
+                safePrefix + "-" + String(i + 1).padStart(width, "0") + ".m22c"
+            );
+        }
+
+        function splitBytesIntoParts(bytes, maxPartBytes) {
+            if (bytes.length <= maxPartBytes) return [bytes];
+            const parts = [];
+            for (let offset = 0; offset < bytes.length; offset += maxPartBytes) {
+                parts.push(bytes.subarray(offset, Math.min(offset + maxPartBytes, bytes.length)));
+            }
+            return parts;
+        }
+
+        async function buildZipForEntries(entries) {
+            const zip = new JSZip();
+            for (const entry of entries) zip.file(entry.name, entry.bytes);
+            return zip.generateAsync({ type: "blob", compression: "STORE" });
+        }
+
+        async function packDynamicContainers(fragmentMap, maxBytes) {
+            // Margine conservativo: il limite riguarda il file .m22c reale, non solo i payload.
+            const safetyOverhead = Math.max(64 * 1024, Math.floor(maxBytes * 0.02));
+            const targetPayload = Math.max(16 * 1024, maxBytes - safetyOverhead);
+
+            const sourceEntries = [];
+            for (const [name, bytes] of fragmentMap.entries()) {
+                if (name === "manifest_tree.dat") {
+                    sourceEntries.push({ name, bytes });
+                    continue;
+                }
+                const parts = splitBytesIntoParts(bytes, Math.max(1024, targetPayload));
+                parts.forEach((partBytes, idx) => {
+                    sourceEntries.push({
+                        name: name.replace(/\.bin$/i, "") + "__part_" + String(idx + 1).padStart(3, "0") + ".bin",
+                        bytes: partBytes
+                    });
+                });
+            }
+
+            cryptoShuffle(sourceEntries);
+
+            let groups = [[]];
+            let currentPayload = 0;
+            for (const entry of sourceEntries) {
+                if (currentPayload > 0 && currentPayload + entry.bytes.length > targetPayload) {
+                    groups.push([]);
+                    currentPayload = 0;
+                }
+                groups[groups.length - 1].push(entry);
+                currentPayload += entry.bytes.length;
+            }
+
+            // I file piccoli devono produrre almeno 3 container REALMENTE popolati.
+            // Se il payload complessivo sta dentro il limite di 3 container,
+            // ridistribuiamo gli elementi sui 3 gruppi invece di lasciare ZIP vuoti.
+            if (groups.length < MIN_CONTAINER_COUNT) {
+                const totalPayload = sourceEntries.reduce((sum, entry) => sum + entry.bytes.length, 0);
+
+                if (totalPayload <= targetPayload * MIN_CONTAINER_COUNT) {
+                    const balanced = Array.from(
+                        { length: MIN_CONTAINER_COUNT },
+                        () => ({ entries: [], payload: 0 })
+                    );
+
+                    // Distribuzione best-fit sul gruppo meno carico.
+                    const sortedEntries = [...sourceEntries].sort(
+                        (a, b) => b.bytes.length - a.bytes.length
+                    );
+
+                    for (const entry of sortedEntries) {
+                        balanced.sort((a, b) => a.payload - b.payload);
+                        balanced[0].entries.push(entry);
+                        balanced[0].payload += entry.bytes.length;
+                    }
+
+                    groups = balanced.map(item => item.entries);
+                } else {
+                    // Caso teorico: il greedy ha prodotto meno di 3 gruppi,
+                    // ma il payload complessivo richiede comunque piu spazio.
+                    // Creiamo un terzo gruppo spostando gli elementi dal gruppo piu carico.
+                    while (groups.length < MIN_CONTAINER_COUNT) {
+                        groups.push([]);
+                    }
+                }
+            }
+
+            // Sicurezza finale: no gruppo vuoto.
+            for (let i = 0; i < groups.length; i++) {
+                if (groups[i].length > 0) continue;
+                let donorIndex = groups.reduce(
+                    (best, group, idx, arr) =>
+                        group.length > arr[best].length ? idx : best,
+                    0
+                );
+                if (donorIndex === i || groups[donorIndex].length <= 1) break;
+                groups[i].push(groups[donorIndex].pop());
+            }
+
+            return groups.filter(group => group.length > 0);
+        }
+
+        async function eseguiEncryption() {
+            try {
+                const fileInput = document.getElementById("inputFile");
+                if (!fileInput.files || fileInput.files.length === 0) throw new Error("Select a file.");
+                if (fsAccessSupported && !outputDirHandle) throw new Error("Select the output folder.");
+
+                const { p1, p2, p3 } = getEncryptionPasswords();
+                const file = fileInput.files[0];
+                const maxMB = parseContainerMaxMB();
+                const maxContainerBytes = Math.floor(maxMB * 1024 * 1024);
+                const namingStyle = document.getElementById("namingStyle").value;
+                const rawPrefix = document.getElementById("customNamesInput").value;
+                const camouflage = getCamouflageSettings();
+
+                log("Reading binary file...");
+                setProgress(5);
+                const rawData = new Uint8Array(await file.arrayBuffer());
+
+                const tryRemoveMetadata = document.getElementById("tryRemoveMetadata").checked;
+                let dataToEncrypt = rawData;
+                let metadataResult = {
+                    bytes: rawData,
+                    changed: false,
+                    supported: false,
+                    method: "Feature not requested"
+                };
+
+                if (tryRemoveMetadata) {
+                    log("Attempting metadata removal (best-effort)...");
+                    metadataResult = await tryRemoveMetadata(file, rawData);
+                    dataToEncrypt = metadataResult.bytes;
+
+                    if (metadataResult.error) {
+                        log("⚠ Metadata sanitization failed: " + metadataResult.error);
+                    } else if (!metadataResult.supported) {
+                        log("ℹ " + metadataResult.method + ". The file will be encrypted without modifying it.");
+                    } else if (metadataResult.changed) {
+                        log("✓ Metadata found and removed: " + metadataResult.method + ".");
+                    } else {
+                        log("ℹ Attempt completed: no removable metadata was found.");
+                    }
+                } else {
+                    log("Metadata removal disabled: the file will be encrypted without sanitization.");
+                }
+
+                const dataHash = await sha256Hex(dataToEncrypt);
+
+                const header = new TextEncoder().encode("M22X");
+                const dataWithHeader = new Uint8Array(header.length + dataToEncrypt.length);
+                dataWithHeader.set(header, 0);
+                dataWithHeader.set(dataToEncrypt, header.length);
+
+                log("L1 AES-256-GCM encryption...");
+                setProgress(20);
+                const d1 = await encryptData(dataWithHeader, p1, KDF.iterations);
+                const arrS2 = splitIntoFour(d1);
+
+                const fragments = new Array(REQUIRED_FRAGMENT_COUNT);
+                const fragmentsMap = new Map();
+                let count64 = 0;
+                const prefix = generateRandomString(4);
+
+                for (let i = 0; i < 4; i++) {
+                    const tmp2 = await encryptData(arrS2[i], p2, KDF.iterations);
+                    const arrP2 = splitIntoFour(tmp2);
+
+                    for (let j = 0; j < 4; j++) {
+                        const tmp3 = await encryptData(arrP2[j], p3, KDF.iterations);
+                        const arrP3 = splitIntoFour(tmp3);
+
+                        for (let k = 0; k < 4; k++) {
+                            count64++;
+                            const name = `sec_${prefix}_${String(count64).padStart(2, "0")}.bin`;
+                            fragments[count64 - 1] = name;
+                            fragmentsMap.set(name, arrP3[k]);
+                        }
+                    }
+                }
+
+                if (fragments.length !== REQUIRED_FRAGMENT_COUNT || fragments.some(value => !value)) {
+                    throw new Error("Internal error while generating the 64 fragments.");
+                }
+
+                setProgress(50);
+                const manifest = {
+                    version: FORMAT_VERSION,
+                    algorithm: "AES-256-GCM",
+                    kdf: { name: KDF.name, hash: KDF.hash, iterations: KDF.iterations, saltLength: KDF.saltLength, ivLength: KDF.ivLength },
+                    originalName: file.name,
+                    originalSize: dataToEncrypt.length,
+                    sha256: dataHash,
+                    cryptoFragments: REQUIRED_FRAGMENT_COUNT,
+                    metadataSanitization: {
+                        requested: tryRemoveMetadata,
+                        changed: metadataResult.changed,
+                        supported: metadataResult.supported,
+                        method: metadataResult.method
+                    },
+                    containerMaxBytes: maxContainerBytes,
+                    fragments
+                };
+
+                const manifestPassword = buildManifestPassword(p1, p2, p3);
+                const encryptedManifest = await encryptData(new TextEncoder().encode(JSON.stringify(manifest)), manifestPassword, KDF.iterations);
+                fragmentsMap.set("manifest_tree.dat", encryptedManifest);
+
+                setProgress(70);
+                log("Dynamic container packing (limit " + maxMB + " MB)...");
+                const groups = await packDynamicContainers(fragmentsMap, maxContainerBytes);
+                const nomiArchivi = buildContainerNames(groups.length, namingStyle, rawPrefix);
+                const camouflageNames = camouflage.enabled
+                    ? buildCamouflageNames(groups.length, camouflage.namingStyle)
+                    : null;
+                const camouflageImages = camouflage.enabled
+                    ? await prepareCamouflageImages(camouflage, groups.length)
+                    : null;
+
+                const createdNames = [];
+                for (let g = 0; g < groups.length; g++) {
+                    const content = await buildZipForEntries(groups[g]);
+                    if (content.size > maxContainerBytes) {
+                        throw new Error("Unable to respect the " + maxMB + " MB limit for " + nomiArchivi[g] + ". Reduce the limit or try again.");
+                    }
+
+                    let outputName = nomiArchivi[g];
+                    let outputBytes = new Uint8Array(await content.arrayBuffer());
+                    if (camouflage.enabled) {
+                        outputName = camouflageNames[g];
+                        outputBytes = await embedContainerInJpeg(content, camouflageImages[g]);
+                    }
+
+                    if (outputDirHandle) {
+                        try {
+                            await saveBytesToDirectory(outputDirHandle, outputName, new Blob([outputBytes], { type: camouflage.enabled ? "image/jpeg" : "application/zip" }));
+                        } catch (e) {
+                            downloadBytes(outputName, outputBytes);
+                        }
+                    } else {
+                        downloadBytes(outputName, outputBytes);
+                    }
+                    createdNames.push(outputName);
+                }
+
+                setProgress(100);
+                log(camouflage.enabled
+                    ? "COMPLETED! M22C v2 generated and camouflaged in " + groups.length + " JPG images."
+                    : "COMPLETED! M22C v2 generated with " + groups.length + " containers.");
+                document.getElementById("folderContentsCripta").innerHTML =
+                    "<strong>Generated files (" + groups.length + "):</strong><br>• " + createdNames.join("<br>• ") +
+                    "<br><br><strong>Mode:</strong> " + (camouflage.enabled ? "Camouflage JPG" : "Standard .m22c containers") +
+                    "<br><strong>Limit per .m22c container:</strong> " + maxMB + " MB" +
+                    "<br><strong>SHA-256 of encrypted payload:</strong><br>" + dataHash +
+                    "<br><strong>Metadata:</strong> " + (tryRemoveMetadata
+                        ? (metadataResult.changed ? "attempt completed successfully on supported metadata" : "attempt completed; bytes unchanged")
+                        : "not requested");
+                document.getElementById("resultActionsCripta").classList.remove("hidden");
+
+            } catch (error) {
+                console.error(error);
+                alert(error.message || "Error during encryption.");
+                log("ERROR: " + (error.message || "Unknown error."));
+                setProgress(0);
+            }
+        }
+
+        async function eseguiDecryption() {
+            try {
+                const filesToProcess = getContainerSelection();
+                validateContainerCount(filesToProcess);
+                if (fsAccessSupported && !outputDirHandleDecrypt) throw new Error("Select the output folder.");
+
+                const { p1, p2, p3 } = getDecryptionPasswords();
+                log("Checking " + filesToProcess.length + " containers...");
+                setProgress(10);
+
+                const { extractedFiles } = await extractContainers(filesToProcess);
+                setProgress(25);
+
+                const manifestPassword = buildManifestPassword(p1, p2, p3);
+                log("Decrypting manifest...");
+                const { manifest, iterations } = await decryptManifest(extractedFiles.get("manifest_tree.dat"), manifestPassword);
+
+                validateManifestAgainstContainers(extractedFiles, manifest);
+                const physicalMap = reconstructDynamicFragments(extractedFiles, manifest);
+                validateFragmentsPresence(physicalMap, manifest.fragments);
+
+                log("Valid manifest: " + manifest.fragments.length + " logical fragments; " + filesToProcess.length + " containers loaded.");
+                setProgress(45);
+
+                const fragmentNames = manifest.fragments;
+                log("Reconstructing L3...");
+                const arrS3 = new Array(16);
+                let c = 0;
+                for (let i = 0; i < 16; i++) {
+                    const merged3 = mergeFour(
+                        physicalMap.get(fragmentNames[c++]),
+                        physicalMap.get(fragmentNames[c++]),
+                        physicalMap.get(fragmentNames[c++]),
+                        physicalMap.get(fragmentNames[c++])
+                    );
+                    arrS3[i] = await decryptData(merged3, p3, iterations);
+                }
+
+                setProgress(60);
+                log("Reconstructing L2...");
+                const arrS2 = new Array(4);
+                c = 0;
+                for (let i = 0; i < 4; i++) {
+                    const merged2 = mergeFour(arrS3[c++], arrS3[c++], arrS3[c++], arrS3[c++]);
+                    arrS2[i] = await decryptData(merged2, p2, iterations);
+                }
+
+                setProgress(75);
+                log("Reconstructing L1...");
+                const finalMerged = mergeFour(arrS2[0], arrS2[1], arrS2[2], arrS2[3]);
+                const decryptedWithHeader = await decryptData(finalMerged, p1, iterations);
+
+                if (decryptedWithHeader.length < 4) throw new Error("Final payload is too short.");
+                const headerCheck = new TextDecoder().decode(decryptedWithHeader.subarray(0, 4));
+                if (headerCheck !== "M22X") throw new Error("Invalid M22X header.");
+
+                const originalData = decryptedWithHeader.subarray(4);
+                if (manifest.version === 2 && manifest.originalSize !== null) {
+                    if (originalData.length !== manifest.originalSize) throw new Error("Size verification failed: reconstructed file does not match the manifest.");
+                    log("Calculating SHA-256 of reconstructed file...");
+                    const restoredHash = await sha256Hex(originalData);
+                    if (!constantTimeStringEqual(restoredHash.toLowerCase(), String(manifest.sha256).toLowerCase())) {
+                        throw new Error("SHA-256 VERIFICATION FAILED: reconstructed file does not match.");
+                    }
+                    log("✓ SHA-256 verified successfully.");
+                    if (manifest.metadataSanitization && manifest.metadataSanitization.requested) {
+                        log("Sanitization information: " + (manifest.metadataSanitization.method || "best-effort") + ".");
+                    }
+                } else {
+                    log("Legacy v1 container: end-to-end SHA-256 is not available in the old manifest.");
+                }
+
+                const safeOriginalName = sanitizeFileName(manifest.originalName);
+                const restoredFileName = "RIP_" + safeOriginalName;
+                setProgress(90);
+
+                let savedInDirectory = false;
+                if (outputDirHandleDecrypt) {
+                    try {
+                        await saveBytesToDirectory(outputDirHandleDecrypt, restoredFileName, originalData);
+                        savedInDirectory = true;
+                    } catch (e) {
+                        log("Direct save failed; starting download.");
+                    }
+                }
+                if (!savedInDirectory) downloadBytes(restoredFileName, originalData);
+
+                document.getElementById("folderContentsDecripta").innerHTML =
+                    "<strong>Recovered file:</strong><br>• " + restoredFileName +
+                    (manifest.version === 2 ? "<br><br><strong>SHA-256 verified:</strong><br>" + manifest.sha256 +
+                    (manifest.metadataSanitization && manifest.metadataSanitization.requested
+                        ? "<br><br><strong>Metadata sanitization:</strong><br>" + (manifest.metadataSanitization.method || "best-effort attempt")
+                        : "") : "") +
+                    "<br><br><strong>Containers used:</strong> " + filesToProcess.length;
+                document.getElementById("resultActionsDecripta").classList.remove("hidden");
+
+                if (document.getElementById("deleteContainersAfter").checked) {
+                    if (!fsAccessSupported || !containerHandles.length) {
+                        log("Automatic deletion is unavailable in fallback mode.");
+                    } else if (!savedInDirectory) {
+                        log("Containers NOT deleted: the file was delivered via browser download.");
+                    } else {
+                        const confirmed = confirm("SHA-256 verified and file saved. Permanently delete the " + filesToProcess.length + " original M22C containers?");
+                        if (confirmed) {
+                            for (const item of filesToProcess) {
+                                try {
+                                    const permission = await item.handle.requestPermission({ mode: "readwrite" });
+                                    if (permission === "granted") await item.handle.remove();
+                                } catch (e) {
+                                    log("Unable to delete " + item.name);
+                                }
+                            }
+                            log("Container deletion completed.");
+                            containerHandles = [];
+                            updateDecryptStep1Status();
+                        }
+                    }
+                }
+
+                setProgress(100);
+                log("COMPLETED! File recovered and verified.");
+            } catch (error) {
+                console.error(error);
+                alert(error.message || "Error during decryption.");
+                log("ERROR: " + (error.message || "Unknown error."));
+                setProgress(0);
+            }
+        }
+
+        window.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                const note =
+                    document.getElementById(
+                        "fsApiNote"
+                    );
+
+                const deleteCheckbox =
+                    document.getElementById(
+                        "deleteContainersAfter"
+                    );
+
+                const deleteNote =
+                    document.getElementById(
+                        "deleteUnsupportedNote"
+                    );
+
+                if (!fsAccessSupported) {
+
+                    note.textContent =
+                        "File System Access API unavailable: saving will use browser download. Automatic container deletion is disabled.";
+
+                    note.classList.remove(
+                        "hidden"
+                    );
+
+                    deleteCheckbox.disabled =
+                        true;
+
+                    deleteNote.classList.remove(
+                        "hidden"
+                    );
+
+                } else {
+
+                    note.textContent =
+                        "File System Access API available: direct saving and filesystem management are enabled.";
+
+                    note.classList.remove(
+                        "hidden"
+                    );
+                }
+
+                document.getElementById("containerMaxMB").addEventListener("input", checkStep3Status);
+                handleCamouflageSource();
+                handleCamouflageUI();
+                checkStep3Status();
+                checkDecryptStep3Status();
+            }
+        );
+    </script>
+
+</body>
+</html>
