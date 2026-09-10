@@ -3,41 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M22C Secure Suite v2</title>
+    <title>M22C Secure Suite v3</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-between p-4 sm:p-8">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-between p-4 sm:p-8">
 
-    <div class="max-w-3xl w-full bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl p-6 sm:p-8">
+    <div class="max-w-3xl w-full bg-white border border-slate-200 rounded-2xl shadow-xl p-6 sm:p-8">
 
         <div class="text-center mb-6">
-            <h1 class="text-2xl sm:text-3xl font-bold tracking-wider text-emerald-400">
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-wider text-emerald-600">
                 M22C SECURE SUITE
             </h1>
 
-            <p class="text-sm text-slate-400 mt-1">
+            <p class="text-sm text-slate-500 mt-1">
                 AES-256-GCM + PBKDF2-SHA-256 + Recursive Fragmentation 4x4x4
             </p>
 
-            <p id="fsApiNote" class="text-xs text-amber-400 mt-2 hidden"></p>
+            <p id="fsApiNote" class="text-xs text-amber-600 mt-2 hidden"></p>
         </div>
 
-        <div class="flex border-b border-slate-700 mb-6">
+        <div class="flex border-b border-slate-200 mb-6">
 
             <button
                 id="btnTabCripta"
                 onclick="switchTab('cripta')"
-                class="flex-1 py-3 font-semibold text-center border-b-2 border-emerald-400 text-emerald-400 transition">
+                class="flex-1 py-3 font-semibold text-center border-b-2 border-emerald-600 text-emerald-600 transition">
                 Encryption & Protection
             </button>
 
             <button
                 id="btnTabDecripta"
                 onclick="switchTab('decripta')"
-                class="flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+                class="flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition">
                 Decryption & Recovery
             </button>
 
@@ -61,7 +61,7 @@
                     type="button"
                     onclick="document.getElementById('inputFile').click()"
                     id="btnStep1"
-                    class="w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between">
+                    class="w-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold py-3.5 px-4 rounded-xl shadow-sm transition duration-200 flex items-center justify-between">
 
                     <span class="flex items-center gap-2">
 
@@ -82,7 +82,7 @@
 
                     <span
                         id="btnStep1Badge"
-                        class="text-xs bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-md font-semibold">
+                        class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-md font-semibold">
                         No file selected
                     </span>
 
@@ -90,12 +90,12 @@
 
             </div>
 
-            <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-4 space-y-4">
+            <div class="bg-slate-50/80 border border-slate-200 rounded-xl p-4 space-y-4">
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Password 1
                         </label>
 
@@ -105,11 +105,11 @@
                             value="123"
                             autocomplete="new-password"
                             placeholder="Password 1"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                            class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Password 2
                         </label>
 
@@ -119,11 +119,11 @@
                             value="456"
                             autocomplete="new-password"
                             placeholder="Password 2"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                            class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Password 3
                         </label>
 
@@ -133,22 +133,22 @@
                             value="789"
                             autocomplete="new-password"
                             placeholder="Password 3"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                            class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                     </div>
 
                 </div>
 
-                <div class="border-t border-slate-700/70 pt-4 mt-2">
+                <div class="border-t border-slate-200 pt-4 mt-2">
                     <div class="flex items-start gap-2">
                         <input
                             type="checkbox"
                             id="tryRemoveMetadata"
-                            class="w-4 h-4 mt-0.5 accent-emerald-400 cursor-pointer">
+                            class="w-4 h-4 mt-0.5 accent-emerald-600 cursor-pointer">
                         <div>
-                            <label for="tryRemoveMetadata" class="text-sm font-semibold text-slate-300 cursor-pointer">
+                            <label for="tryRemoveMetadata" class="text-sm font-semibold text-slate-700 cursor-pointer">
                                 Try to remove metadata before encryption
                             </label>
-                            <div class="text-[10px] text-slate-500 mt-1">
+                            <div class="text-[10px] text-slate-400 mt-1">
                                 M22C will try to remove metadata supported by the file format. Removal may be incomplete or unavailable for some formats. The original file is never modified.
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Maximum container size (MB)
                         </label>
                         <input
@@ -169,19 +169,19 @@
                             max="4096"
                             step="1"
                             onchange="checkStep3Status()"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
-                        <div class="text-[10px] text-slate-500 mt-1">Minimum 1 MB. Minimum physical count: 3 containers.</div>
+                            class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
+                        <div class="text-[10px] text-slate-400 mt-1">Minimum 1 MB. Minimum physical count: 3 containers.</div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Container Naming Style
                         </label>
 
                         <select
                             id="namingStyle"
                             onchange="handleNamingSelection()"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                            class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                             <option value="random">Random</option>
                             <option value="ordered">Ordered (gs-01, gs-02, ...)</option>
                             <option value="custom">Custom prefix</option>
@@ -189,7 +189,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Output Folder
                         </label>
 
@@ -197,7 +197,7 @@
                             type="button"
                             onclick="chooseOutputFolder()"
                             id="btnStep2"
-                            class="w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-2 px-3 rounded-xl shadow transition duration-200 flex items-center justify-between text-xs">
+                            class="w-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold py-2 px-3 rounded-xl shadow-sm transition duration-200 flex items-center justify-between text-xs">
 
                             <span class="truncate flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -206,7 +206,7 @@
                                 <span id="btnStep2Text">Select folder (optional in fallback)</span>
                             </span>
 
-                            <span id="btnStep2Badge" class="shrink-0 bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-semibold ml-2">
+                            <span id="btnStep2Badge" class="shrink-0 bg-rose-100 text-rose-700 px-2 py-0.5 rounded font-semibold ml-2">
                                 Not set
                             </span>
                         </button>
@@ -214,7 +214,7 @@
                 </div>
 
                 <div id="customNamingBox" class="hidden pt-1">
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">
                         Custom prefix
                     </label>
                     <input
@@ -222,37 +222,37 @@
                         id="customNamesInput"
                         placeholder="es. MIOFILE"
                         value="M22C"
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm font-mono text-emerald-400 focus:outline-none focus:border-emerald-400">
-                    <div class="text-[10px] text-slate-500 mt-1">Automatically generates PREFIX-01.m22c, PREFIX-02.m22c, ...</div>
+                        class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm font-mono focus:outline-none focus:border-emerald-500">
+                    <div class="text-[10px] text-slate-400 mt-1">Automatically generates PREFIX-01.m22c, PREFIX-02.m22c, ...</div>
                 </div>
 
-                <div class="border-t border-slate-700/70 pt-4 mt-2">
+                <div class="border-t border-slate-200 pt-4 mt-2">
                     <div class="flex items-start gap-2">
                         <input
                             type="checkbox"
                             id="enableCamouflage"
                             onchange="handleCamouflageUI()"
-                            class="w-4 h-4 mt-0.5 accent-emerald-400 cursor-pointer">
+                            class="w-4 h-4 mt-0.5 accent-emerald-600 cursor-pointer">
                         <div>
-                            <label for="enableCamouflage" class="text-sm font-semibold text-slate-300 cursor-pointer">
+                            <label for="enableCamouflage" class="text-sm font-semibold text-slate-700 cursor-pointer">
                                 Camouflage containers as JPG images
                             </label>
-                            <div class="text-[10px] text-slate-500 mt-1">
+                            <div class="text-[10px] text-slate-400 mt-1">
                                 Disabled by default. The M22C container is appended to a JPEG.
                             </div>
                         </div>
                     </div>
 
-                    <div id="camouflageOptions" class="hidden mt-3 bg-slate-950/70 border border-slate-800 rounded-xl p-3 space-y-3">
+                    <div id="camouflageOptions" class="hidden mt-3 bg-white border border-slate-200 rounded-xl p-3 space-y-3">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-400 mb-1">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">
                                     Image source
                                 </label>
                                 <select
                                     id="camouflageSource"
                                     onchange="handleCamouflageSource()"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                                    class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                                     <option value="auto" selected>Generate automatically</option>
                                     <option value="single">Use one image for all containers</option>
                                     <option value="multiple">Select one image for each container</option>
@@ -260,12 +260,12 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-semibold text-slate-400 mb-1">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">
                                     Image file names
                                 </label>
                                 <select
                                     id="camouflageNamingStyle"
-                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                                    class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                                     <option value="random" selected>Casuale</option>
                                     <option value="ordered">Ordered (IMG-01.jpg, IMG-02.jpg, ...)</option>
                                 </select>
@@ -273,18 +273,18 @@
                         </div>
 
                         <div id="camouflageSingleBox" class="hidden">
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">
                                 JPG image to reuse
                             </label>
                             <input
                                 type="file"
                                 id="camouflageSingleInput"
                                 accept=".jpg,.jpeg,image/jpeg"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400">
+                                class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-600">
                         </div>
 
                         <div id="camouflageMultipleBox" class="hidden">
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">
                                 JPG images
                             </label>
                             <input
@@ -292,19 +292,19 @@
                                 id="camouflageMultipleInput"
                                 multiple
                                 accept=".jpg,.jpeg,image/jpeg"
-                                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400">
-                            <div class="text-[10px] text-slate-500 mt-1">Select exactly one image for each generated containers.</div>
+                                class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-600">
+                            <div class="text-[10px] text-slate-400 mt-1">Select JPG images (will be reused if container count differs).</div>
                         </div>
 
-                        <div class="text-[10px] text-slate-500">
-                            Note: the MB limit still applies to the container <strong class="text-slate-300">.m22c</strong>. The final JPEG also includes the image data.
+                        <div class="text-[10px] text-slate-400">
+                            Note: the MB limit still applies to the container <strong class="text-slate-600">.m22c</strong>. The final JPEG also includes the image data.
                         </div>
                     </div>
                 </div>
 
-                <div class="text-[11px] text-slate-500">
-                    Current encryption format: <strong class="text-slate-300">M22C v2</strong> with dynamic containers.
-                    Default limit: <strong class="text-slate-300">10 MB</strong>. PBKDF2-SHA-256 with 600,000 iterations.
+                <div class="text-[11px] text-slate-400">
+                    Current encryption format: <strong class="text-slate-600">M22C v2</strong> with dynamic containers.
+                    Default limit: <strong class="text-slate-600">10 MB</strong>. PBKDF2-SHA-256 with 600,000 iterations.
                 </div>
 
             </div>
@@ -315,7 +315,7 @@
                     onclick="runEncryption()"
                     id="btnStep3"
                     disabled
-                    class="w-full bg-slate-700 text-slate-400 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-60">
+                    class="w-full bg-slate-100 text-slate-400 font-bold py-3.5 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-80">
 
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -335,15 +335,15 @@
 
             <div
                 id="resultActionsCripta"
-                class="hidden p-4 bg-slate-950 border border-emerald-500/30 rounded-xl space-y-2">
+                class="hidden p-4 bg-emerald-50/60 border border-emerald-200 rounded-xl space-y-2">
 
-                <div class="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                <div class="flex items-center gap-2 text-emerald-700 font-semibold text-sm">
                     ✓ Processing completed successfully!
                 </div>
 
                 <div
                     id="folderContentsCripta"
-                    class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded-lg border border-slate-800">
+                    class="text-xs text-slate-700 font-mono bg-white p-3 rounded-lg border border-slate-200">
                 </div>
 
             </div>
@@ -370,7 +370,7 @@
                     type="button"
                     onclick="startContainerSelection()"
                     id="btnStep1D"
-                    class="w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between">
+                    class="w-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold py-3.5 px-4 rounded-xl shadow-sm transition duration-200 flex items-center justify-between">
 
                     <span class="flex items-center gap-2">
 
@@ -390,7 +390,7 @@
 
                     <span
                         id="btnStep1DBadge"
-                        class="text-xs bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-md font-semibold">
+                        class="text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-md font-semibold">
                         0 selected
                     </span>
 
@@ -398,12 +398,12 @@
 
             </div>
 
-            <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-4 space-y-4">
+            <div class="bg-slate-50/80 border border-slate-200 rounded-xl p-4 space-y-4">
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Password 1
                         </label>
 
@@ -413,11 +413,11 @@
                             value="123"
                             autocomplete="current-password"
                             placeholder="Password 1"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                            class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Password 2
                         </label>
 
@@ -427,11 +427,11 @@
                             value="456"
                             autocomplete="current-password"
                             placeholder="Password 2"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                            class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">
                             Password 3
                         </label>
 
@@ -441,14 +441,14 @@
                             value="789"
                             autocomplete="current-password"
                             placeholder="Password 3"
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400">
+                            class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                     </div>
 
                 </div>
 
                 <div class="pt-1">
 
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">
                         Output Folder
                     </label>
 
@@ -456,7 +456,7 @@
                         type="button"
                         onclick="chooseDecryptOutputFolder()"
                         id="btnStep2D"
-                        class="w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-2.5 px-3 rounded-xl shadow transition duration-200 flex items-center justify-between text-xs">
+                        class="w-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold py-2.5 px-3 rounded-xl shadow-sm transition duration-200 flex items-center justify-between text-xs">
 
                         <span class="truncate flex items-center gap-1.5">
 
@@ -476,7 +476,7 @@
 
                         <span
                             id="btnStep2DBadge"
-                            class="shrink-0 bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-semibold ml-2">
+                            class="shrink-0 bg-rose-100 text-rose-700 px-2 py-0.5 rounded font-semibold ml-2">
                             Not set
                         </span>
 
@@ -486,18 +486,18 @@
 
             </div>
 
-            <div class="bg-slate-900/60 border border-slate-700/80 rounded-xl p-4">
+            <div class="bg-slate-50/80 border border-slate-200 rounded-xl p-4">
 
                 <div class="flex items-start gap-2">
 
                     <input
                         type="checkbox"
                         id="deleteContainersAfter"
-                        class="w-4 h-4 mt-0.5 accent-emerald-400 cursor-pointer">
+                        class="w-4 h-4 mt-0.5 accent-emerald-600 cursor-pointer">
 
                     <label
                         for="deleteContainersAfter"
-                        class="text-sm text-slate-300 cursor-pointer">
+                        class="text-sm text-slate-700 cursor-pointer">
                         Delete all original containers when finished.
                     </label>
 
@@ -505,7 +505,7 @@
 
                 <p
                     id="deleteUnsupportedNote"
-                    class="text-xs text-amber-400 mt-2 pl-6 hidden">
+                    class="text-xs text-amber-600 mt-2 pl-6 hidden">
                     Automatic deletion requires the File System Access API.
                 </p>
 
@@ -517,7 +517,7 @@
                     onclick="runDecryption()"
                     id="btnStep3D"
                     disabled
-                    class="w-full bg-slate-700 text-slate-400 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-60">
+                    class="w-full bg-slate-100 text-slate-400 font-bold py-3.5 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-80">
 
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -537,15 +537,15 @@
 
             <div
                 id="resultActionsDecripta"
-                class="hidden p-4 bg-slate-950 border border-emerald-500/30 rounded-xl space-y-2">
+                class="hidden p-4 bg-emerald-50/60 border border-emerald-200 rounded-xl space-y-2">
 
-                <div class="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                <div class="flex items-center gap-2 text-emerald-700 font-semibold text-sm">
                     ✓ File recovered and verified successfully!
                 </div>
 
                 <div
                     id="folderContentsDecripta"
-                    class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded-lg border border-slate-800">
+                    class="text-xs text-slate-700 font-mono bg-white p-3 rounded-lg border border-slate-200">
                 </div>
 
             </div>
@@ -554,7 +554,7 @@
 
         <div class="mt-8 space-y-3">
 
-            <div class="w-full bg-slate-900 rounded-full h-4 overflow-hidden border border-slate-700">
+            <div class="w-full bg-slate-900 rounded-full h-4 overflow-hidden border border-slate-800">
 
                 <div
                     id="progressBar"
@@ -565,7 +565,7 @@
 
             <div
                 id="statusLog"
-                class="bg-slate-950 font-mono text-xs text-slate-400 p-3 rounded-xl h-28 overflow-y-auto border border-slate-800">
+                class="bg-slate-900 font-mono text-xs text-slate-300 p-3 rounded-xl h-28 overflow-y-auto border border-slate-800">
                 Ready for processing...
             </div>
 
@@ -581,7 +581,7 @@
                 href="https://cruelben.github.io/"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-emerald-400 hover:underline font-medium">
+                class="text-emerald-600 hover:underline font-medium">
                 Benevolo B.
             </a>
         </span>
@@ -595,25 +595,6 @@
     <script>
         "use strict";
 
-        /*
-         * M22C SECURE SUITE v2
-         *
-         * Main changes:
-         * 1) Correct browser fallback: la cartella output è obbligatoria solo
-         *    when the File System Access API is available.
-         * 2) All application randomness uses crypto.getRandomValues().
-         * 3) Fisher-Yates uses rejection sampling to avoid modulo bias.
-         * 4) M22C v2 format with versioned KDF: PBKDF2-SHA-256, 600,000 iterations.
-         *    A legacy v1 read mode with 210,000 iterations is also available.
-         * 5) Strict validation: at least 3 containers, 64 logical fragments, no
-         *    duplicates/missing; fragments may be split into physical parts.
-         * 6) SHA-256 of the actually encrypted payload stored in the v2 manifest
-         *    e verified after reconstruction.
-         * 7) Non-default option "Try to remove metadata before encryption":
-         *    best-effort in-memory sanitization for supported image formats.
-         *    The original file is never modified.
-         */
-
         const FORMAT_VERSION = 2;
 
         const KDF = {
@@ -624,16 +605,12 @@
             ivLength: 12
         };
 
-        // Compatibility with containers produced by the previous format.
         const LEGACY_KDF_ITERATIONS = 210000;
 
         const REQUIRED_FRAGMENT_COUNT = 64;
         const MIN_CONTAINER_COUNT = 3;
         const MAX_CONTAINER_SIZE_HARD_MB = 4096;
 
-        // Camouflage JPEG: the M22C payload is appended after the original JPEG.
-        // The JPEG remains normally viewable; M22C recognizes the trailer using
-        // magic + length and recovers the original container.
         const CAMOUFLAGE_MAGIC = new TextEncoder().encode("M22C-JPEG-PAYLOAD-V1");
         const CAMOUFLAGE_TRAILER_BYTES = CAMOUFLAGE_MAGIC.length + 8;
 
@@ -662,10 +639,10 @@
 
             if (enabled) {
                 button.className =
-                    "w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-pointer opacity-100";
+                    "w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-pointer opacity-100";
             } else {
                 button.className =
-                    "w-full bg-slate-700 text-slate-400 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-60";
+                    "w-full bg-slate-100 text-slate-400 font-bold py-3.5 px-4 rounded-xl transition duration-200 flex items-center justify-center gap-2 cursor-not-allowed opacity-80";
             }
         }
 
@@ -704,7 +681,6 @@
             return buffer[0];
         }
 
-        // Uniform random integer in [0, maxExclusive), without modulo bias.
         function randomInt(maxExclusive) {
             if (!Number.isSafeInteger(maxExclusive) || maxExclusive <= 0) {
                 throw new Error("Invalid randomInt parameter.");
@@ -758,15 +734,6 @@
             return safe;
         }
 
-        /*
-         * Sanitization best-effort dei metadata.
-         *
-         * IMPORTANTE:
-         * - lavora sempre su una copia in memoria;
-         * - non modify the original File selezionato dall'utente;
-         * - does not promise complete metadata removal;
-         * - returns the original bytes for unsupported formats and reports this.
-         */
         function getFileExtension(name) {
             const match = String(name || "").toLowerCase().match(/\.([a-z0-9]+)$/);
             return match ? match[1] : "";
@@ -813,7 +780,6 @@
 
             while (offset < bytes.length) {
                 if (bytes[offset] !== 0xFF) {
-                    // After SOS, the rest of the JPEG contains compressed data: do not parse it.
                     output.push(bytes.slice(offset));
                     break;
                 }
@@ -827,7 +793,6 @@
 
                 const marker = bytes[offset++];
 
-                // FF D9 = EOI, FF DA = SOS. Da SOS in poi copiamo tutto senza modifiche.
                 if (marker === 0xD9) {
                     output.push(bytes.slice(markerOffset, offset));
                     break;
@@ -837,7 +802,6 @@
                     break;
                 }
 
-                // Marker without a length segment.
                 if (marker === 0x01 || (marker >= 0xD0 && marker <= 0xD7)) {
                     output.push(bytes.slice(markerOffset, offset));
                     continue;
@@ -854,9 +818,9 @@
 
                 const segmentEnd = offset + segmentLength;
                 const isMetadataSegment =
-                    marker === 0xE1 || // EXIF / XMP
-                    marker === 0xED || // IPTC / Photoshop IRB
-                    marker === 0xFE;   // Commento JPEG
+                    marker === 0xE1 ||
+                    marker === 0xED ||
+                    marker === 0xFE;
 
                 if (isMetadataSegment) {
                     removed++;
@@ -878,6 +842,7 @@
             };
         }
 
+        // CORREZIONE BUG 1: Rimossa l'operazione bitwise << 16 sul secondo byte della lunghezza del chunk
         function sanitizePngMetadata(bytes) {
             if (!isPngSignature(bytes)) {
                 return { bytes, changed: false, supported: false, method: "PNG" };
@@ -907,7 +872,7 @@
 
                 const length = (
                     bytes[offset] * 0x1000000 +
-                    (bytes[offset + 1] << 16) +
+                    (bytes[offset + 1] * 65536) +
                     (bytes[offset + 2] << 8) +
                     bytes[offset + 3]
                 );
@@ -1323,42 +1288,40 @@
             return true;
         }
 
+        // CORREZIONE BUG 2: Lettura O(1) del trailer al fondo del file senza cicli di ricerca retrogradi
         function findCamouflagePayload(jpegBytes) {
             if (!(jpegBytes instanceof Uint8Array) || jpegBytes.length < CAMOUFLAGE_TRAILER_BYTES) {
                 return null;
             }
 
-            // Search from the end to greatly reduce the risk of confusing
-            // eventuali sequenze uguali presenti casualmente nel JPEG o nel payload.
-            for (let pos = jpegBytes.length - CAMOUFLAGE_TRAILER_BYTES; pos >= 0; pos--) {
-                if (!bytesEqualAt(jpegBytes, pos, CAMOUFLAGE_MAGIC)) continue;
-
-                const lengthOffset = pos + CAMOUFLAGE_MAGIC.length;
-                const view = new DataView(
-                    jpegBytes.buffer,
-                    jpegBytes.byteOffset + lengthOffset,
-                    8
-                );
-                const payloadLengthBig = view.getBigUint64(0, true);
-                if (payloadLengthBig > BigInt(Number.MAX_SAFE_INTEGER)) continue;
-
-                const payloadLength = Number(payloadLengthBig);
-                const payloadStart = lengthOffset + 8;
-                if (payloadStart + payloadLength !== jpegBytes.length) continue;
-
-                const jpegCore = jpegBytes.subarray(0, pos);
-                if (!isJpegBytes(jpegCore)) continue;
-
-                return jpegBytes.subarray(payloadStart);
+            const trailerOffset = jpegBytes.length - CAMOUFLAGE_TRAILER_BYTES;
+            if (!bytesEqualAt(jpegBytes, trailerOffset, CAMOUFLAGE_MAGIC)) {
+                return null;
             }
 
-            return null;
+            const lengthOffset = trailerOffset + CAMOUFLAGE_MAGIC.length;
+            const view = new DataView(
+                jpegBytes.buffer,
+                jpegBytes.byteOffset + lengthOffset,
+                8
+            );
+            const payloadLengthBig = view.getBigUint64(0, true);
+            if (payloadLengthBig > BigInt(Number.MAX_SAFE_INTEGER)) return null;
+
+            const payloadLength = Number(payloadLengthBig);
+            const payloadStart = trailerOffset - payloadLength;
+
+            if (payloadStart < 2) return null;
+
+            const jpegCore = jpegBytes.subarray(0, payloadStart);
+            if (!isJpegBytes(jpegCore)) return null;
+
+            return jpegBytes.subarray(payloadStart, trailerOffset);
         }
 
         async function unwrapContainerSource(sourceFile) {
             const rawBytes = new Uint8Array(await sourceFile.arrayBuffer());
 
-            // Prima proviamo direttamente come ZIP/M22C normale.
             try {
                 const zip = new JSZip();
                 const zipContent = await zip.loadAsync(rawBytes);
@@ -1366,7 +1329,6 @@
                     return { bytes: rawBytes, camouflage: false };
                 }
             } catch (_) {
-                // Non è un ZIP diretto: potrebbe essere un JPEG camouflage.
             }
 
             const payload = findCamouflagePayload(rawBytes);
@@ -1398,6 +1360,7 @@
             return { magic: CAMOUFLAGE_MAGIC, lengthBytes };
         }
 
+        // CORREZIONE BUG 2 (cont.): Trailer inserito in coda al file [JPEG] + [PAYLOAD] + [MAGIC] + [LENGTH]
         async function embedContainerInJpeg(containerBlob, jpegBytes) {
             if (!isJpegBytes(jpegBytes)) {
                 throw new Error("The camouflage image is not a valid JPEG.");
@@ -1405,7 +1368,7 @@
 
             const payloadBytes = new Uint8Array(await containerBlob.arrayBuffer());
             const trailer = buildCamouflageTrailer(payloadBytes);
-            return concatUint8Arrays(jpegBytes, trailer.magic, trailer.lengthBytes, payloadBytes);
+            return concatUint8Arrays(jpegBytes, payloadBytes, trailer.magic, trailer.lengthBytes);
         }
 
         function randomColorTriplet() {
@@ -1427,7 +1390,6 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Different visual pattern for each image, without adding M22C metadata.
             const [or, og, ob] = randomColorTriplet();
             ctx.globalAlpha = 0.18;
             ctx.fillStyle = `rgb(${or}, ${og}, ${ob})`;
@@ -1461,6 +1423,7 @@
             return bytes;
         }
 
+        // CORREZIONE BUG 3: Gestione dinamica delle immagini camouflage multiple con riciclo modulo %
         async function prepareCamouflageImages(settings, count) {
             if (!settings.enabled) return null;
 
@@ -1484,12 +1447,15 @@
 
             if (settings.source === "multiple") {
                 const input = document.getElementById("camouflageMultipleInput");
-                if (!input.files || input.files.length !== count) {
-                    throw new Error("With the 'one image per container' mode, you must select exactly " + count + " JPG images.");
+                if (!input.files || input.files.length === 0) {
+                    throw new Error("Select at least one JPG image for camouflage.");
                 }
                 const files = Array.from(input.files);
                 const images = [];
-                for (const file of files) images.push(await fileToJpegBytes(file));
+                for (let i = 0; i < count; i++) {
+                    const file = files[i % files.length];
+                    images.push(await fileToJpegBytes(file));
+                }
                 return images;
             }
 
@@ -1522,19 +1488,19 @@
                 secD.classList.add("hidden");
 
                 btnC.className =
-                    "flex-1 py-3 font-semibold text-center border-b-2 border-emerald-400 text-emerald-400 transition";
+                    "flex-1 py-3 font-semibold text-center border-b-2 border-emerald-600 text-emerald-600 transition";
 
                 btnD.className =
-                    "flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition";
+                    "flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition";
             } else {
                 secC.classList.add("hidden");
                 secD.classList.remove("hidden");
 
                 btnD.className =
-                    "flex-1 py-3 font-semibold text-center border-b-2 border-emerald-400 text-emerald-400 transition";
+                    "flex-1 py-3 font-semibold text-center border-b-2 border-emerald-600 text-emerald-600 transition";
 
                 btnC.className =
-                    "flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition";
+                    "flex-1 py-3 font-semibold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-600 transition";
             }
         }
 
@@ -1552,19 +1518,19 @@
 
             if (input.files && input.files.length > 0) {
                 button.className =
-                    "w-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between";
+                    "w-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold py-3.5 px-4 rounded-xl shadow-sm transition duration-200 flex items-center justify-between";
 
                 badge.className =
-                    "text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-md font-semibold truncate max-w-[200px]";
+                    "text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-md font-semibold truncate max-w-[200px]";
 
                 badge.textContent =
                     "✓ " + input.files[0].name;
             } else {
                 button.className =
-                    "w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between";
+                    "w-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold py-3.5 px-4 rounded-xl shadow-sm transition duration-200 flex items-center justify-between";
 
                 badge.className =
-                    "text-xs bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-md font-semibold";
+                    "text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-md font-semibold";
 
                 badge.textContent =
                     "No file selected";
@@ -1596,10 +1562,10 @@
                     );
 
                 btn.className =
-                    "w-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-2 px-3 rounded-xl shadow transition duration-200 flex items-center justify-between text-xs";
+                    "w-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold py-2 px-3 rounded-xl shadow-sm transition duration-200 flex items-center justify-between text-xs";
 
                 badge.className =
-                    "shrink-0 bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-semibold ml-2 truncate max-w-[150px]";
+                    "shrink-0 bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-semibold ml-2 truncate max-w-[150px]";
 
                 badge.textContent =
                     "✓ " + outputDirHandle.name;
@@ -1671,9 +1637,6 @@
                             ]
                         });
 
-                    // For consistency, if the user selects more than 3 files
-                    // manteniamo la selezione e leave validation to
-                    // reject it.
                     updateDecryptStep1Status();
 
                 } catch (e) {
@@ -1706,14 +1669,14 @@
 
             if (count >= MIN_CONTAINER_COUNT) {
                 button.className =
-                    "w-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between";
+                    "w-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold py-3.5 px-4 rounded-xl shadow-sm transition duration-200 flex items-center justify-between";
                 badge.className =
-                    "text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-md font-semibold";
+                    "text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-md font-semibold";
             } else {
                 button.className =
-                    "w-full bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-300 font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-between";
+                    "w-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold py-3.5 px-4 rounded-xl shadow-sm transition duration-200 flex items-center justify-between";
                 badge.className =
-                    "text-xs bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-md font-semibold";
+                    "text-xs bg-rose-100 text-rose-700 px-2.5 py-1 rounded-md font-semibold";
             }
 
             badge.textContent = count + " selected";
@@ -1744,10 +1707,10 @@
                     );
 
                 btn.className =
-                    "w-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 font-bold py-2.5 px-3 rounded-xl shadow transition duration-200 flex items-center justify-between text-xs";
+                    "w-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold py-2.5 px-3 rounded-xl shadow-sm transition duration-200 flex items-center justify-between text-xs";
 
                 badge.className =
-                    "shrink-0 bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-semibold ml-2 truncate max-w-[150px]";
+                    "shrink-0 bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-semibold ml-2 truncate max-w-[150px]";
 
                 badge.textContent =
                     "✓ " +
@@ -1989,7 +1952,6 @@
             encryptedManifest,
             manifestPassword
         ) {
-            // Prima tentiamo il formato attuale.
             try {
                 const bytes =
                     await decryptData(
@@ -2013,7 +1975,6 @@
 
             } catch (currentError) {
 
-                // Fallback esplicito alla v1.
                 try {
 
                     const bytes =
@@ -2082,7 +2043,6 @@
         }
 
         function reconstructDynamicFragments(extractedFiles, manifest) {
-            // I vecchi manifest v2 hanno direttamente i 64 filename .bin.
             const hasDynamicParts = extractedFiles.has("manifest_tree.dat") &&
                 Array.from(extractedFiles.keys()).some(name => /__part_\d+\.bin$/i.test(name));
 
@@ -2146,15 +2106,11 @@
                 );
 
             if (!hasDynamicParts) {
-                // Previous format: all 64 logical fragments are present
-                // direttamente nei containers.
                 validateFragmentsPresence(
                     extractedFiles,
                     manifest.fragments
                 );
             } else {
-                // Dynamic format: each logical fragment may be
-                // rappresentato da una o più physical parts.
                 for (const logicalName of manifest.fragments) {
                     const prefix =
                         logicalName.replace(/\.bin$/i, "") + "__part_";
@@ -2175,9 +2131,6 @@
                 }
             }
 
-            // Verifica che non ci siano oggetti sec_... estranei al manifesto.
-            // Nel formato dinamico sono validi i nomi sec_xxxx_YY__part_NNN.bin
-            // if the part belongs to one of the 64 declared fragments.
             for (const filename of extractedFiles.keys()) {
                 if (
                     !filename.startsWith("sec_") ||
@@ -2304,7 +2257,6 @@
         }
 
         async function packDynamicContainers(fragmentMap, maxBytes) {
-            // Margine conservativo: il limite riguarda il file .m22c reale, non solo i payload.
             const safetyOverhead = Math.max(64 * 1024, Math.floor(maxBytes * 0.02));
             const targetPayload = Math.max(16 * 1024, maxBytes - safetyOverhead);
 
@@ -2336,9 +2288,6 @@
                 currentPayload += entry.bytes.length;
             }
 
-            // I file piccoli devono produrre almeno 3 container REALMENTE popolati.
-            // Se il payload complessivo sta dentro il limite di 3 container,
-            // ridistribuiamo gli elementi sui 3 gruppi invece di lasciare ZIP vuoti.
             if (groups.length < MIN_CONTAINER_COUNT) {
                 const totalPayload = sourceEntries.reduce((sum, entry) => sum + entry.bytes.length, 0);
 
@@ -2348,7 +2297,6 @@
                         () => ({ entries: [], payload: 0 })
                     );
 
-                    // Distribuzione best-fit sul gruppo meno carico.
                     const sortedEntries = [...sourceEntries].sort(
                         (a, b) => b.bytes.length - a.bytes.length
                     );
@@ -2361,16 +2309,12 @@
 
                     groups = balanced.map(item => item.entries);
                 } else {
-                    // Caso teorico: il greedy ha prodotto meno di 3 gruppi,
-                    // ma il payload complessivo richiede comunque piu spazio.
-                    // Creiamo un terzo gruppo spostando gli elementi dal gruppo piu carico.
                     while (groups.length < MIN_CONTAINER_COUNT) {
                         groups.push([]);
                     }
                 }
             }
 
-            // Sicurezza finale: no gruppo vuoto.
             for (let i = 0; i < groups.length; i++) {
                 if (groups[i].length > 0) continue;
                 let donorIndex = groups.reduce(
@@ -2385,7 +2329,7 @@
             return groups.filter(group => group.length > 0);
         }
 
-        async function eseguiEncryption() {
+        async function runEncryption() {
             try {
                 const fileInput = document.getElementById("inputFile");
                 if (!fileInput.files || fileInput.files.length === 0) throw new Error("Select a file.");
@@ -2403,7 +2347,7 @@
                 setProgress(5);
                 const rawData = new Uint8Array(await file.arrayBuffer());
 
-                const tryRemoveMetadata = document.getElementById("tryRemoveMetadata").checked;
+                const tryRemoveMetadataFlag = document.getElementById("tryRemoveMetadata").checked;
                 let dataToEncrypt = rawData;
                 let metadataResult = {
                     bytes: rawData,
@@ -2412,7 +2356,7 @@
                     method: "Feature not requested"
                 };
 
-                if (tryRemoveMetadata) {
+                if (tryRemoveMetadataFlag) {
                     log("Attempting metadata removal (best-effort)...");
                     metadataResult = await tryRemoveMetadata(file, rawData);
                     dataToEncrypt = metadataResult.bytes;
@@ -2478,7 +2422,7 @@
                     sha256: dataHash,
                     cryptoFragments: REQUIRED_FRAGMENT_COUNT,
                     metadataSanitization: {
-                        requested: tryRemoveMetadata,
+                        requested: tryRemoveMetadataFlag,
                         changed: metadataResult.changed,
                         supported: metadataResult.supported,
                         method: metadataResult.method
@@ -2537,7 +2481,7 @@
                     "<br><br><strong>Mode:</strong> " + (camouflage.enabled ? "Camouflage JPG" : "Standard .m22c containers") +
                     "<br><strong>Limit per .m22c container:</strong> " + maxMB + " MB" +
                     "<br><strong>SHA-256 of encrypted payload:</strong><br>" + dataHash +
-                    "<br><strong>Metadata:</strong> " + (tryRemoveMetadata
+                    "<br><strong>Metadata:</strong> " + (tryRemoveMetadataFlag
                         ? (metadataResult.changed ? "attempt completed successfully on supported metadata" : "attempt completed; bytes unchanged")
                         : "not requested");
                 document.getElementById("resultActionsCripta").classList.remove("hidden");
@@ -2550,7 +2494,7 @@
             }
         }
 
-        async function eseguiDecryption() {
+        async function runDecryption() {
             try {
                 const filesToProcess = getContainerSelection();
                 validateContainerCount(filesToProcess);
@@ -2656,8 +2600,11 @@
                         if (confirmed) {
                             for (const item of filesToProcess) {
                                 try {
-                                    const permission = await item.handle.requestPermission({ mode: "readwrite" });
-                                    if (permission === "granted") await item.handle.remove();
+                                    // CORREZIONE BUG 4: Controllo prima dell'invocazione per evitare eccezioni con handle nullo
+                                    if (item.handle) {
+                                        const permission = await item.handle.requestPermission({ mode: "readwrite" });
+                                        if (permission === "granted") await item.handle.remove();
+                                    }
                                 } catch (e) {
                                     log("Unable to delete " + item.name);
                                 }
